@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontak - Nurzal Kifli Portfolio</title>
+  <meta name="description" content="Hubungi Nurzal Kifli untuk konsultasi fotografi, desain grafis, dan proyek kontraktor. WhatsApp, Email, dan Instagram tersedia." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Contact Layout */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    /* Contact Info Card */
+    .contact-info-card {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-xl);
+      padding: 36px;
+      position: sticky;
+      top: 100px;
+    }
+    .contact-brand-name {
+      font-family: var(--fd);
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .contact-brand-name span { color: var(--purple-light); }
+    .contact-brand-bio { color: var(--w50); font-size: 0.875rem; line-height: 1.75; margin-bottom: 28px; }
+
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px;
+      background: var(--glass-w);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r);
+      margin-bottom: 12px;
+      transition: var(--t);
+      text-decoration: none; color: inherit;
+    }
+    .contact-method:hover {
+      border-color: var(--glass-bh);
+      background: var(--glass-h);
+      transform: translateX(6px);
+    }
+    .method-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.22);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .method-label { font-size:0.68rem; font-weight:700; color:var(--purple-light); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+    .method-value { font-size:0.875rem; color:var(--w90); word-break:break-all; }
+    .method-action { font-size:0.72rem; color:var(--w50); margin-top:2px; }
+
+    .contact-availability {
+      margin-top: 28px;
+      padding: 18px;
+      background: rgba(139,92,246,0.06);
+      border: 1px solid rgba(139,92,246,0.18);
+      border-radius: var(--r);
+    }
+    .avail-title { font-size:0.68rem; font-weight:700; color:var(--purple-light); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px; }
+    .avail-day { display:flex; justify-content:space-between; font-size:0.82rem; color:var(--w50); margin-bottom:8px; }
+    .avail-day .day-name { color:var(--w70); }
+    .avail-day .day-time { color:var(--purple-light); }
+
+    /* Contact Form Card */
+    .contact-form-card {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-xl);
+      padding: 44px;
+    }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .submit-btn { width:100%; justify-content:center; font-size:0.95rem; padding:15px; margin-top:6px; }
+
+    /* Location */
+    .location-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-xl);
+      padding: 36px;
+      display: flex; align-items: center; gap: 36px; flex-wrap: wrap;
+    }
+    .location-icon-box {
+      width: 72px; height: 72px;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: var(--r-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; flex-shrink: 0;
+    }
+    .location-info h3 { font-size:1.2rem; margin-bottom:8px; font-weight:700; }
+    .location-info p { color:var(--w50); font-size:0.9rem; line-height:1.75; }
+
+    /* FAQ */
+    .faq-item { border:1px solid var(--glass-b); border-radius:var(--r); overflow:hidden; margin-bottom:10px; transition:var(--t); }
+    .faq-item:hover { border-color:var(--glass-bh); }
+    .faq-question {
+      width:100%; text-align:left; padding:18px 22px;
+      background: var(--glass);
+      color:var(--w100);
+      font-family:var(--fb); font-size:0.9rem; font-weight:600;
+      cursor:pointer; border:none;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      transition:var(--t); backdrop-filter:blur(12px);
+    }
+    .faq-question:hover { background:var(--glass-h); }
+    .faq-question.open { color:var(--purple-light); background:var(--glass-h); }
+    .faq-toggle { font-size:1.2rem; transition:transform 0.3s ease; flex-shrink:0; color:var(--purple-light); }
+    .faq-question.open .faq-toggle { transform:rotate(45deg); }
+    .faq-answer { display:none; padding:0 22px 18px; background:rgba(139,92,246,0.04); color:var(--w50); font-size:0.875rem; line-height:1.8; }
+    .faq-answer.open { display:block; }
+
+    @media (max-width:1024px) { .contact-layout { grid-template-columns:1fr; } .contact-info-card { position:static; } }
+    @media (max-width:640px) { .contact-form-card { padding:26px 18px; } .form-row { grid-template-columns:1fr; } .contact-info-card { padding:24px 18px; } }
+  </style>
+</head>
+<body>
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Nurzal <span>Kifli</span></a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Buka Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <button class="nav-close-btn" id="navClose" aria-label="Tutup Menu">&#x2715;</button>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="photography.html">Fotografi</a></li>
+        <li><a href="design.html">Desain Grafis</a></li>
+        <li><a href="contractor.html">Kontraktor</a></li>
+        <li><a href="about.html">Tentang</a></li>
+        <li><a href="contact.html" class="nav-cta active">Hubungi Saya</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <div class="page-hero-tag">&#x2709;&#xFE0F; Kontak</div>
+        <h1>Mari <span class="text-grad">Berkolaborasi</span></h1>
+        <p>Punya proyek menarik atau pertanyaan? Saya siap mendengarkan dan memberikan solusi terbaik. Respon dalam waktu kurang dari 24 jam.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Main -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-layout">
+
+        <!-- Left: Info -->
+        <div class="contact-info-card reveal">
+          <div class="contact-brand-name">Nurzal <span>Kifli</span></div>
+          <p class="contact-brand-bio">Fotografer &middot; Desainer Grafis &middot; Kontraktor<br>Siap membantu mewujudkan proyek impian Anda dengan profesionalisme dan dedikasi penuh.</p>
+
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="contact-method" id="contactInstagram">
+            <div class="method-icon">&#x1F4F8;</div>
+            <div>
+              <div class="method-label">Instagram</div>
+              <div class="method-value">@nurzalkifli</div>
+              <div class="method-action">Lihat karya terbaru saya &#x2197;</div>
+            </div>
+          </a>
+
+          <a href="https://wa.me/6287831258910?text=Halo%20Nurzal!%20Saya%20ingin%20konsultasi..." target="_blank" rel="noopener" class="contact-method" id="contactWhatsapp">
+            <div class="method-icon">&#x1F4AC;</div>
+            <div>
+              <div class="method-label">WhatsApp</div>
+              <div class="method-value">087831258910</div>
+              <div class="method-action">Chat langsung sekarang &#x2197;</div>
+            </div>
+          </a>
+
+          <a href="mailto:nurzalkifli.nk@gmail.com" class="contact-method" id="contactEmail">
+            <div class="method-icon">&#x2709;&#xFE0F;</div>
+            <div>
+              <div class="method-label">Email</div>
+              <div class="method-value">nurzalkifli.nk@gmail.com</div>
+              <div class="method-action">Kirim email sekarang &#x2197;</div>
+            </div>
+          </a>
+
+          <div class="contact-availability">
+            <div class="avail-title">&#x1F7E2; Ketersediaan</div>
+            <div class="avail-day"><span class="day-name">Senin &mdash; Jumat</span><span class="day-time">08.00 &mdash; 18.00</span></div>
+            <div class="avail-day"><span class="day-name">Sabtu</span><span class="day-time">09.00 &mdash; 15.00</span></div>
+            <div class="avail-day"><span class="day-name">Minggu</span><span class="day-time">Untuk proyek urgent</span></div>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="contact-form-card reveal delay-2">
+          <h2 style="font-family:var(--fd);font-size:1.7rem;margin-bottom:8px;font-weight:800;">Kirim <span class="text-grad">Pesan</span></h2>
+          <p style="color:var(--w50);font-size:0.875rem;margin-bottom:28px;line-height:1.75;">Isi form di bawah ini dan saya akan segera menghubungi Anda dalam 24 jam kerja.</p>
+
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="contactName">Nama Lengkap *</label>
+                <input class="form-input" type="text" id="contactName" name="name" placeholder="Nama Anda" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contactPhone">Nomor HP</label>
+                <input class="form-input" type="tel" id="contactPhone" name="phone" placeholder="08xxxxxxxxxx" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactEmailInput">Email *</label>
+              <input class="form-input" type="email" id="contactEmailInput" name="email" placeholder="email@anda.com" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactService">Layanan yang Dibutuhkan *</label>
+              <select class="form-select" id="contactService" name="service" required>
+                <option value="" disabled selected>Pilih layanan...</option>
+                <option value="fotografi">&#x1F4F7; Fotografi</option>
+                <option value="desain">&#x1F3A8; Desain Grafis</option>
+                <option value="kontraktor">&#x1F3D7; Kontraktor / Renovasi</option>
+                <option value="lainnya">&#x2728; Lainnya / Kombinasi</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactBudget">Estimasi Anggaran</label>
+              <select class="form-select" id="contactBudget" name="budget">
+                <option value="" disabled selected>Pilih range anggaran...</option>
+                <option value="lt1jt">Di bawah Rp 1.000.000</option>
+                <option value="1-5jt">Rp 1.000.000 - 5.000.000</option>
+                <option value="5-20jt">Rp 5.000.000 - 20.000.000</option>
+                <option value="gt20jt">Di atas Rp 20.000.000</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contactMessage">Deskripsi Proyek *</label>
+              <textarea class="form-textarea" id="contactMessage" name="message" placeholder="Ceritakan tentang proyek Anda..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-purple submit-btn" id="submitBtn">
+              &#x1F680; Kirim Pesan Sekarang
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Location -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="location-card reveal">
+        <div class="location-icon-box">&#x1F4CD;</div>
+        <div class="location-info">
+          <h3>Lokasi &amp; Area Layanan</h3>
+          <p>Berbasis di <strong style="color:var(--purple-light);">Indonesia</strong> &mdash; siap melayani klien dari seluruh penjuru nusantara. Untuk fotografi dan desain dapat dilakukan secara remote. Untuk konstruksi, tersedia area Makassar dan sekitarnya.</p>
+        </div>
+        <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="btn btn-outline-purple" style="flex-shrink:0;">&#x1F4F1; Tanya Area</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header centered reveal" style="margin-bottom:36px;">
+        <div class="section-label">&#x2753; FAQ</div>
+        <h2 class="section-title">Pertanyaan yang <span class="text-grad">Sering Diajukan</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div style="max-width:780px;margin:0 auto;" class="reveal">
+        <div class="faq-item">
+          <button class="faq-question" id="faq1" aria-expanded="false">
+            Berapa lama waktu pengerjaan proyek desain?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer" id="faq1Answer">Tergantung kompleksitas. Logo design biasanya 3-5 hari kerja, brand identity package 1-2 minggu. Saya selalu memberikan estimasi waktu yang realistis sebelum memulai.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" id="faq2" aria-expanded="false">
+            Apakah ada konsultasi gratis?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer" id="faq2Answer">Ya! Konsultasi awal selalu gratis. Kita bisa diskusi via WhatsApp atau telepon untuk memahami kebutuhan Anda sebelum memulai proyek.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" id="faq3" aria-expanded="false">
+            Bagaimana sistem pembayaran untuk proyek konstruksi?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer" id="faq3Answer">Pembayaran dibagi dalam termin: DP 30% sebelum mulai, 40% di pertengahan proyek, dan 30% setelah selesai dan diterima klien. Semua tertulis dalam kontrak yang jelas.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" id="faq4" aria-expanded="false">
+            Apakah foto wedding bisa dikirim online?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer" id="faq4Answer">Ya, hasil foto dikirim via Google Drive atau WeTransfer dalam format full resolution. Biasanya dalam 1-2 minggu setelah acara sudah selesai diedit.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" id="faq5" aria-expanded="false">
+            Berapa kali revisi untuk proyek desain?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer" id="faq5Answer">Setiap paket desain sudah termasuk 3x revisi gratis. Revisi tambahan tersedia dengan biaya yang wajar. Kepuasan Anda adalah prioritas saya!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Nurzal <span>Kifli</span></span>
+          <p>Siap berkolaborasi untuk mewujudkan proyek impian Anda. Jangan ragu untuk menghubungi saya!</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">&#x1F4F8;</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">&#x1F4AC;</a>
+            <a href="mailto:nurzalkifli.nk@gmail.com" class="social-icon" aria-label="Email">&#x2709;&#xFE0F;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Halaman</h4>
+          <a href="index.html">Home</a>
+          <a href="photography.html">Fotografi</a>
+          <a href="design.html">Desain Grafis</a>
+          <a href="contractor.html">Kontraktor</a>
+          <a href="about.html">Tentang Saya</a>
+          <a href="contact.html">Kontak</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener">@nurzalkifli</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener">087831258910</a>
+          <a href="mailto:nurzalkifli.nk@gmail.com">nurzalkifli.nk@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nurzal Kifli. All rights reserved.</p>
+        <p style="color:var(--purple-light);font-size:0.8rem;">Made with &#x2726; Passion</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isOpen = btn.classList.contains('open');
+        document.querySelectorAll('.faq-question').forEach(b => {
+          b.classList.remove('open');
+          b.setAttribute('aria-expanded', 'false');
+          b.nextElementSibling.classList.remove('open');
+        });
+        if (!isOpen) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+          btn.nextElementSibling.classList.add('open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

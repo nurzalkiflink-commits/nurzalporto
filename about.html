@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tentang Saya - Nurzal Kifli Portfolio</title>
+  <meta name="description" content="Kenali lebih dekat Nurzal Kifli - fotografer, desainer grafis, dan kontraktor profesional berpengalaman." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* About Layout */
+    .about-intro {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: center;
+      padding: 80px 0 60px;
+    }
+    .about-photo { position:relative; }
+    .about-deco {
+      position:absolute; top:-20px; right:-20px;
+      width:100px; height:100px;
+      border:1.5px solid rgba(139,92,246,0.2);
+      border-radius:var(--r-xl);
+      animation: float 5s ease-in-out infinite;
+      z-index:0;
+    }
+    .about-photo-frame {
+      position:relative; z-index:1;
+      border-radius:var(--r-xl); overflow:hidden;
+      border:1px solid var(--glass-b);
+    }
+    .about-photo-frame img { width:100%; height:520px; object-fit:cover; object-position:top; }
+    .about-photo-badge {
+      position:absolute; bottom:24px; left:24px; z-index:2;
+      background:rgba(10,10,20,0.9);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(139,92,246,0.35);
+      border-radius:var(--r);
+      padding:16px 20px;
+    }
+    .badge-icon { font-size:1.6rem; margin-bottom:4px; }
+    .badge-label { font-size:0.85rem; font-weight:600; }
+    .badge-sub { font-size:0.75rem; color:var(--purple-light); }
+
+    /* About Content */
+    .about-lead { font-size:1.05rem; color:var(--w90); line-height:1.9; margin-bottom:14px; }
+    .about-text { color:var(--w50); font-size:0.925rem; line-height:1.88; margin-bottom:28px; }
+    .about-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px; }
+    .about-info-item { display:flex; flex-direction:column; gap:4px; }
+    .info-label { font-size:0.68rem; color:var(--purple-light); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; }
+    .info-value { font-size:0.875rem; color:var(--w70); }
+
+    /* Skills */
+    .skills-section { background:rgba(139,92,246,0.03); }
+    .skills-layout { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+    .skill-category { margin-bottom:36px; }
+    .skill-category-title {
+      font-size:0.72rem; font-weight:700; color:var(--purple-light);
+      letter-spacing:1.5px; text-transform:uppercase;
+      margin-bottom:20px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .skill-category-title::after { content:''; flex:1; height:1px; background:var(--glass-b); }
+
+    /* Values */
+    .value-card {
+      text-align:center; padding:34px 22px;
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      border-radius:var(--r-lg);
+      backdrop-filter:blur(16px);
+      transition:var(--t);
+    }
+    .value-card:hover { border-color:var(--glass-bh); transform:translateY(-6px); box-shadow:var(--glow-s); }
+    .value-icon { font-size:2.5rem; margin-bottom:14px; }
+    .value-title { font-family:var(--fd); font-size:1.15rem; margin-bottom:10px; font-weight:700; }
+    .value-desc { color:var(--w50); font-size:0.875rem; line-height:1.75; }
+
+    @media (max-width:768px) {
+      .about-intro { grid-template-columns:1fr; gap:36px; padding:60px 0 40px; }
+      .skills-layout { grid-template-columns:1fr; }
+      .about-info-grid { grid-template-columns:1fr; }
+      .about-photo-frame img { height:360px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Nurzal <span>Kifli</span></a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Buka Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <button class="nav-close-btn" id="navClose" aria-label="Tutup Menu">&#x2715;</button>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="photography.html">Fotografi</a></li>
+        <li><a href="design.html">Desain Grafis</a></li>
+        <li><a href="contractor.html">Kontraktor</a></li>
+        <li><a href="about.html" class="active">Tentang</a></li>
+        <li><a href="contact.html" class="nav-cta">Hubungi Saya</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div style="height:80px;"></div>
+
+  <!-- About Intro -->
+  <section class="section" style="padding-top:40px;">
+    <div class="container">
+      <div class="about-intro">
+        <!-- Photo -->
+        <div class="about-photo animate-fadeInLeft">
+          <div class="about-deco"></div>
+          <div class="about-photo-frame">
+            <img src="img/nurzal_kifli.png" alt="Nurzal Kifli - Foto Profil" />
+          </div>
+          <div class="about-photo-badge">
+            <div class="badge-icon">&#x1F3C6;</div>
+            <div class="badge-label">Profesional Sejak 2018</div>
+            <div class="badge-sub">9+ Tahun Pengalaman</div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="about-content animate-fadeInRight">
+          <div class="section-label" style="margin-bottom:16px;">&#x1F464; Tentang Saya</div>
+          <h1 class="section-title">Halo, Saya <span class="text-grad">Nurzal Kifli</span></h1>
+          <div class="divider"></div>
+          <p class="about-lead">Seorang profesional multi-disiplin yang berpassion di tiga bidang utama &mdash; Fotografi, Desain Grafis, dan Konstruksi.</p>
+          <p class="about-text">Saya percaya bahwa setiap karya &mdash; baik itu sebuah foto, desain, maupun bangunan &mdash; adalah cerminan dari dedikasi dan detail yang tidak ternilai. Dengan pengalaman lebih dari 9 tahun, saya telah berhasil menyelesaikan lebih dari 40 proyek untuk berbagai klien.</p>
+          <p class="about-text">Semangat saya adalah menciptakan sesuatu yang bermakna dan memberikan nilai nyata. Setiap proyek selalu dikerjakan dengan penuh tanggung jawab, kreativitas, dan standar profesional tertinggi.</p>
+
+          <div class="about-info-grid">
+            <div class="about-info-item"><span class="info-label">Nama</span><span class="info-value">Nurzal Kifli</span></div>
+            <div class="about-info-item"><span class="info-label">Email</span><span class="info-value">nurzalkifli.nk@gmail.com</span></div>
+            <div class="about-info-item"><span class="info-label">Keahlian</span><span class="info-value">Fotografi &middot; Desain &middot; Konstruksi</span></div>
+            <div class="about-info-item"><span class="info-label">Instagram</span><span class="info-value">@nurzalkifli</span></div>
+            <div class="about-info-item"><span class="info-label">WhatsApp</span><span class="info-value">087831258910</span></div>
+            <div class="about-info-item"><span class="info-label">Status</span><span class="info-value" style="color:var(--purple-light);">&#x2714; Tersedia untuk Proyek</span></div>
+          </div>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="contact.html" class="btn btn-purple">&#x1F4AC; Hubungi Saya</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="btn btn-outline-purple">&#x1F4F1; WhatsApp</a>
+          </div>
+        </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="skills-section section">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x26A1; Keahlian</div>
+        <h2 class="section-title">Skill &amp; <span class="text-grad">Kemampuan</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="skills-layout">
+        <div>
+          <div class="skill-category">
+            <div class="skill-category-title">&#x1F4F7; Fotografi & Videografi</div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Portrait Photography</span><span class="skill-percent">95%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Wedding Photography</span><span class="skill-percent">90%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Product Photography</span><span class="skill-percent">88%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Photo Retouching</span><span class="skill-percent">80%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Landscape Photography</span><span class="skill-percent">95%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95%"></div></div>
+          </div>
+          <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Sport Photography</span><span class="skill-percent">95%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95%"></div></div>
+          </div>
+          <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Videography</span><span class="skill-percent">80%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80%"></div></div>
+        </div>
+      </div>
+      </div>
+        <div class="reveal delay-1">
+        <div>
+          <div class="skill-category">
+            <div class="skill-category-title">&#x1F3A8; Desain Grafis</div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Logo &amp; Brand Design</span><span class="skill-percent">93%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="93%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Adobe Photoshop</span><span class="skill-percent">96%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="96%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Adobe Illustrator</span><span class="skill-percent">88%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Social Media Design</span><span class="skill-percent">91%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="91%"></div></div>
+            </div>
+          </div>
+          </div>
+          <div class="skill-category">
+            <div class="skill-category-title">&#x1F3D7;&#xFE0F; Kontraktor</div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Project Management</span><span class="skill-percent">87%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="87%"></div></div>
+            </div>
+            <div class="skill-bar-wrapper">
+              <div class="skill-bar-info"><span>Residential Construction</span><span class="skill-percent">90%</span></div>
+              <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Timeline -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">&#x1F4BC; Pengalaman</div>
+        <h2 class="section-title">Perjalanan <span class="text-grad">Karier</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="grid-2" style="gap:60px;">
+        <div class="reveal delay-1">
+          <h3 style="font-size:0.85rem;font-weight:700;color:var(--purple-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;">&#x1F4F7; Fotografi &amp; Desain</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-year">2015 &mdash; Sekarang</div>
+              <div class="timeline-title">Fotografer</div>
+              <p class="timeline-desc">Mengambil berbagai proyek fotografi dan videografi secara freelance untuk klien dari berbagai industri.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2018 &mdash; Sekarang</div>
+              <div class="timeline-title">Desain Grafis</div>
+              <p class="timeline-desc">Mengembangkan konten visual berkualitas tinggi untuk brand lokal dan nasional di media sosial.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2022</div>
+              <div class="timeline-title">Videografer</div>
+              <p class="timeline-desc">Spesialisasi videografi event dan sudah berbagai acara yang telah dilakukan baik formal dan non formal.</p>
+            </div>
+          </div>
+        </div>
+        <div class="reveal delay-2">
+          <h3 style="font-size:0.85rem;font-weight:700;color:var(--purple-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;">&#x1F3D7;&#xFE0F; Konstruksi</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-year">2018 &mdash; Sekarang</div>
+              <div class="timeline-title">Kontraktor Independen</div>
+              <p class="timeline-desc">Menjalankan bisnis kontraktor independen untuk proyek pembangunan dan renovasi residensial.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2019</div>
+              <div class="timeline-title">Project Konstruksi Jembatan</div>
+              <p class="timeline-desc">Mengelola tim dan proyek konstruksi skala menengah dengan nilai kontrak hingga Empat Milyar Rupiah.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2018 &mdash; 2022</div>
+              <div class="timeline-title">35+ Proyek Konstruksi Selesai</div>
+              <p class="timeline-desc">Berhasil menyelesaikan lebih dari 25 proyek konstruksi Jembatan, Jalan dan Bangunan dengan tingkat kepuasan klien 98%.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x2B50; Nilai</div>
+        <h2 class="section-title">Nilai yang <span class="text-grad">Saya Pegang</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="grid-3">
+        <div class="value-card reveal delay-1"><div class="value-icon">&#x1F48E;</div><div class="value-title">Kualitas Tanpa Kompromi</div><p class="value-desc">Setiap karya dikerjakan dengan standar tertinggi. Kualitas bukan pilihan &mdash; itu adalah komitmen.</p></div>
+        <div class="value-card reveal delay-2"><div class="value-icon">&#x1F91D;</div><div class="value-title">Kejujuran &amp; Transparansi</div><p class="value-desc">Komunikasi terbuka dan jujur dengan klien adalah fondasi dari setiap hubungan kerja yang baik.</p></div>
+        <div class="value-card reveal delay-3"><div class="value-icon">&#x1F680;</div><div class="value-title">Inovasi Berkelanjutan</div><p class="value-desc">Selalu belajar dan berkembang mengikuti tren terbaru untuk memberikan solusi yang relevan dan segar.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="text-align:center;">
+    <div class="container">
+      <div class="reveal">
+        <h2 class="section-title">Mari <span class="text-grad">Berkolaborasi!</span></h2>
+        <p style="color:var(--w50);max-width:480px;margin:16px auto 36px;line-height:1.85;">Punya proyek menarik? Saya selalu terbuka untuk peluang baru dan kolaborasi yang saling menguntungkan.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F4E9; Kirim Pesan</a>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="btn btn-glass">&#x1F4F8; Follow Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Nurzal <span>Kifli</span></span>
+          <p>Profesional multi-bidang yang berdedikasi menghadirkan karya terbaik di setiap proyek.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">&#x1F4F8;</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">&#x1F4AC;</a>
+            <a href="mailto:nurzalkifli.nk@gmail.com" class="social-icon" aria-label="Email">&#x2709;&#xFE0F;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Halaman</h4>
+          <a href="index.html">Home</a>
+          <a href="photography.html">Fotografi</a>
+          <a href="design.html">Desain Grafis</a>
+          <a href="contractor.html">Kontraktor</a>
+          <a href="about.html">Tentang Saya</a>
+          <a href="contact.html">Kontak</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener">@nurzalkifli</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener">087831258910</a>
+          <a href="mailto:nurzalkifli.nk@gmail.com">nurzalkifli.nk@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nurzal Kifli. All rights reserved.</p>
+        <p style="color:var(--purple-light);font-size:0.8rem;">Made with &#x2726; Passion</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

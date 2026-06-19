@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fotografi - Nurzal Kifli Portfolio</title>
+  <meta name="description" content="Galeri fotografi profesional Nurzal Kifli - Portrait, Landscape, Wedding, dan Product Photography terbaik." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .gallery-item {
+      position: relative;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      transition: var(--t);
+    }
+    .gallery-item.tall { aspect-ratio: 3/4; }
+    .gallery-item.wide { aspect-ratio: 16/9; grid-column: span 2; }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+      opacity: 0; transition: var(--t);
+      display: flex; align-items: flex-end; padding: 24px;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-info { transform: translateY(10px); transition: transform 0.3s ease; }
+    .gallery-item:hover .gallery-info { transform: translateY(0); }
+    .gallery-info h4 { font-family: var(--fd); font-size: 1rem; margin-bottom: 4px; }
+    .gallery-info span { font-size: 0.78rem; color: var(--purple-light); }
+    .gallery-zoom {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(139,92,246,0.85);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      opacity: 0; transform: scale(0.8);
+      transition: var(--t); color: var(--w100);
+    }
+    .gallery-item:hover .gallery-zoom { opacity: 1; transform: scale(1); }
+
+    /* Photo Service Cards */
+    .photo-services { background: transparent; }
+    .photo-service-card {
+      padding: 32px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-lg);
+      transition: var(--t);
+    }
+    .photo-service-card:hover {
+      border-color: var(--glass-bh);
+      transform: translateY(-6px);
+      box-shadow: var(--glow);
+    }
+    .psc-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .psc-title { font-family: var(--fd); font-size: 1.2rem; margin-bottom: 10px; font-weight: 700; }
+    .psc-desc { color: var(--w50); font-size: 0.875rem; line-height: 1.75; margin-bottom: 18px; }
+    .psc-price { font-size: 0.85rem; color: var(--purple-light); font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item.wide { grid-column: span 2; }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.wide { grid-column: span 1; aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Nurzal <span>Kifli</span></a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Buka Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <button class="nav-close-btn" id="navClose" aria-label="Tutup Menu">&#x2715;</button>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="photography.html" class="active">Fotografi</a></li>
+        <li><a href="design.html">Desain Grafis</a></li>
+        <li><a href="contractor.html">Kontraktor</a></li>
+        <li><a href="about.html">Tentang</a></li>
+        <li><a href="contact.html" class="nav-cta">Hubungi Saya</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <div class="page-hero-tag">&#x1F4F7; Galeri Foto</div>
+        <h1>Fotografi <span class="text-grad">Profesional</span></h1>
+        <p>Mengabadikan keindahan dunia melalui lensa &mdash; setiap frame adalah sebuah cerita. Eksplorasi koleksi karya fotografi terbaik saya.</p>
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F4F8; Pesan Sesi Foto</a>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="btn btn-glass">Instagram &#x2197;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="section">
+    <div class="container">
+      <!-- Filter Bar -->
+      <div class="filter-bar reveal">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="portrait">Portrait</button>
+        <button class="filter-btn" data-filter="landscape">Landscape</button>
+        <button class="filter-btn" data-filter="wedding">Wedding</button>
+        <button class="filter-btn" data-filter="product">Product</button>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-item tall reveal delay-1" data-category="portrait" data-lightbox data-src="img/photo_portrait.png">
+          <img src="img/photo_portrait.png" alt="Portrait Photography" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Portrait Session</h4><span>Studio Portrait &middot; 2024</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item reveal delay-2" data-category="landscape" data-lightbox data-src="img/photo_landscape.png">
+          <img src="img/photo_landscape.png" alt="Landscape Photography" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Mountain Sunrise</h4><span>Landscape &middot; Jawa, Indonesia</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item reveal delay-3" data-category="product" data-lightbox data-src="img/photo_product.png">
+          <img src="img/photo_product.png" alt="Product Photography" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Luxury Perfume</h4><span>Product Photography &middot; 2024</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item wide reveal delay-2" data-category="wedding" data-lightbox data-src="img/photo_wedding.png">
+          <img src="img/photo_wedding.png" alt="Wedding Photography" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Wedding Ceremony</h4><span>Wedding Photography &middot; 2024</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item reveal delay-1" data-category="portrait" data-lightbox data-src="img/photo_portrait.png">
+          <img src="img/photo_portrait.png" alt="Portrait Session 2" loading="lazy" style="object-position:top;" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Fashion Portrait</h4><span>Studio Portrait &middot; 2024</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item reveal delay-2" data-category="landscape" data-lightbox data-src="img/photo_landscape.png">
+          <img src="img/photo_landscape.png" alt="Landscape 2" loading="lazy" style="object-position:bottom;" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Rice Terraces</h4><span>Landscape &middot; Bali, Indonesia</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item tall reveal delay-3" data-category="product" data-lightbox data-src="img/photo_product.png">
+          <img src="img/photo_product.png" alt="Product 2" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Product Showcase</h4><span>Commercial &middot; 2024</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+
+        <div class="gallery-item reveal delay-1" data-category="wedding" data-lightbox data-src="img/photo_wedding.png">
+          <img src="img/photo_wedding.png" alt="Wedding 2" loading="lazy" style="object-position:top;" />
+          <div class="gallery-overlay">
+            <div class="gallery-info"><h4>Pre-Wedding Shoot</h4><span>Wedding Photography &middot; 2023</span></div>
+          </div>
+          <div class="gallery-zoom">&#x1F50D;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photography Services -->
+  <section class="photo-services section">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x2728; Layanan</div>
+        <h2 class="section-title">Paket <span class="text-grad">Fotografi</span></h2>
+        <div class="divider"></div>
+        <p class="section-subtitle">Pilih paket yang sesuai dengan kebutuhan Anda. Konsultasi gratis untuk semua paket.</p>
+      </div>
+      <div class="grid-4">
+        <div class="photo-service-card reveal delay-1">
+          <div class="psc-icon">&#x1F9CD;</div>
+          <div class="psc-title">Portrait</div>
+          <p class="psc-desc">Sesi foto portrait profesional di studio atau outdoor. Hasil berkualitas tinggi dengan editing terbaik.</p>
+          <div class="psc-price">Mulai dari Rp 500K</div>
+        </div>
+        <div class="photo-service-card reveal delay-2">
+          <div class="psc-icon">&#x26F0;&#xFE0F;</div>
+          <div class="psc-title">Landscape</div>
+          <p class="psc-desc">Ekspedisi fotografi alam &mdash; gunung, pantai, persawahan. Mengabadikan keindahan alam Indonesia.</p>
+          <div class="psc-price">Hubungi untuk harga</div>
+        </div>
+        <div class="photo-service-card reveal delay-3">
+          <div class="psc-icon">&#x1F48D;</div>
+          <div class="psc-title">Wedding</div>
+          <p class="psc-desc">Dokumentasi hari spesial pernikahan Anda &mdash; dari akad sampai resepsi. Kenangan indah seumur hidup.</p>
+          <div class="psc-price">Mulai dari Rp 3.5JT</div>
+        </div>
+        <div class="photo-service-card reveal delay-4">
+          <div class="psc-icon">&#x1F4E6;</div>
+          <div class="psc-title">Product</div>
+          <p class="psc-desc">Foto produk komersial berkualitas untuk marketplace, website, dan media sosial brand Anda.</p>
+          <div class="psc-price">Mulai dari Rp 800K</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:48px;" class="reveal">
+        <a href="contact.html" class="btn btn-purple">&#x1F4DE; Konsultasi Gratis</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Nurzal <span>Kifli</span></span>
+          <p>Fotografer profesional yang berdedikasi mengabadikan momen terbaik dalam hidup Anda.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">&#x1F4F8;</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">&#x1F4AC;</a>
+            <a href="mailto:nurzalkifli.nk@gmail.com" class="social-icon" aria-label="Email">&#x2709;&#xFE0F;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Halaman</h4>
+          <a href="index.html">Home</a>
+          <a href="photography.html">Fotografi</a>
+          <a href="design.html">Desain Grafis</a>
+          <a href="contractor.html">Kontraktor</a>
+          <a href="about.html">Tentang Saya</a>
+          <a href="contact.html">Kontak</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener">@nurzalkifli</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener">087831258910</a>
+          <a href="mailto:nurzalkifli.nk@gmail.com">nurzalkifli.nk@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nurzal Kifli. All rights reserved.</p>
+        <p style="color:var(--purple-light);font-size:0.8rem;">Made with &#x2726; Passion</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Preview Foto">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Tutup">&#x2715;</button>
+    <img id="lightboxImg" src="" alt="Preview" />
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

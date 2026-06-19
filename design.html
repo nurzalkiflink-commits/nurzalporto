@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Desain Grafis - Nurzal Kifli Portfolio</title>
+  <meta name="description" content="Portofolio desain grafis Nurzal Kifli - Logo, Branding, Poster, dan berbagai karya desain kreatif profesional." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Design Portfolio Grid */
+    .design-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .design-card {
+      border-radius:var(--r-lg); overflow:hidden;
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      backdrop-filter:blur(20px);
+      transition:var(--t); cursor:pointer;
+    }
+    .design-card:hover {
+      border-color:var(--glass-bh);
+      transform:translateY(-8px);
+      box-shadow:0 20px 60px rgba(139,92,246,0.2);
+    }
+    .design-preview { height:220px; overflow:hidden; position:relative; }
+    .design-preview img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease; }
+    .design-card:hover .design-preview img { transform:scale(1.08); }
+    .design-preview-overlay {
+      position:absolute; inset:0;
+      background:rgba(0,0,0,0.6);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:var(--t);
+      font-size:1.8rem; color:var(--w100);
+    }
+    .design-card:hover .design-preview-overlay { opacity:1; }
+    .design-body { padding:24px; }
+    .design-category { font-size:0.72rem; color:var(--purple-light); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+    .design-title { font-family:var(--fd); font-size:1.1rem; margin-bottom:8px; font-weight:700; }
+    .design-desc { color:var(--w50); font-size:0.85rem; line-height:1.7; margin-bottom:16px; }
+    .design-tags { display:flex; flex-wrap:wrap; gap:6px; }
+
+    /* Process */
+    .process-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+    .process-step {
+      position:relative; padding:28px 22px;
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      border-radius:var(--r-lg);
+      backdrop-filter:blur(16px);
+      transition:var(--t);
+    }
+    .process-step:hover { border-color:var(--glass-bh); }
+    .process-step:not(:last-child)::after {
+      content:'\2192'; position:absolute;
+      right:-16px; top:50%; transform:translateY(-50%);
+      color:var(--purple-light); font-size:1.2rem; z-index:1;
+    }
+    .step-num { font-size:2.2rem; font-family:var(--fd); font-weight:800; color:rgba(139,92,246,0.18); line-height:1; margin-bottom:10px; }
+    .step-icon { font-size:1.4rem; margin-bottom:8px; }
+    .step-title { font-weight:700; font-size:0.9rem; margin-bottom:8px; }
+    .step-desc { color:var(--w50); font-size:0.82rem; line-height:1.65; }
+
+    /* Tools */
+    .tool-item {
+      display:flex; flex-direction:column; align-items:center; gap:10px;
+      padding:26px 18px;
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      border-radius:var(--r-lg);
+      backdrop-filter:blur(16px);
+      transition:var(--t); text-align:center;
+    }
+    .tool-item:hover { border-color:var(--glass-bh); transform:translateY(-4px); box-shadow:var(--glow-s); }
+    .tool-icon { font-size:2.2rem; }
+    .tool-name { font-weight:700; font-size:0.875rem; }
+    .tool-sub { font-size:0.75rem; color:var(--w50); }
+
+    @media (max-width:1024px) { .process-grid { grid-template-columns:repeat(2,1fr); } .process-step:nth-child(2)::after { display:none; } }
+    @media (max-width:768px) { .design-grid { grid-template-columns:1fr; } .process-grid { grid-template-columns:1fr; } .process-step::after { display:none !important; } }
+  </style>
+</head>
+<body>
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Nurzal <span>Kifli</span></a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Buka Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <button class="nav-close-btn" id="navClose" aria-label="Tutup Menu">&#x2715;</button>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="photography.html">Fotografi</a></li>
+        <li><a href="design.html" class="active">Desain Grafis</a></li>
+        <li><a href="contractor.html">Kontraktor</a></li>
+        <li><a href="about.html">Tentang</a></li>
+        <li><a href="contact.html" class="nav-cta">Hubungi Saya</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <div class="page-hero-tag">&#x1F3A8; Desain Grafis</div>
+        <h1>Kreativitas yang <span class="text-grad">Berbicara</span></h1>
+        <p>Desain bukan hanya tentang keindahan visual &mdash; ini tentang komunikasi yang efektif. Setiap karya dirancang untuk memberikan dampak nyata pada brand Anda.</p>
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F3A8; Pesan Desain</a>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="btn btn-glass">Lihat di Instagram &#x2197;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Design Portfolio -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">&#x2728; Portfolio</div>
+        <h2 class="section-title">Karya <span class="text-grad">Terbaik</span></h2>
+        <div class="divider"></div>
+        <p class="section-subtitle">Koleksi proyek desain yang telah memperkuat identitas brand dan meningkatkan engagement klien.</p>
+      </div>
+
+      <div class="filter-bar reveal">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="logo">Logo &amp; Branding</button>
+        <button class="filter-btn" data-filter="poster">Poster &amp; Iklan</button>
+        <button class="filter-btn" data-filter="identity">Brand Identity</button>
+      </div>
+
+      <div class="design-grid">
+        <div class="design-card reveal delay-1" data-category="logo" data-lightbox data-src="img/design_logo.png">
+          <div class="design-preview">
+            <img src="img/design_logo.png" alt="Logo Design" loading="lazy" />
+            <div class="design-preview-overlay">&#x1F50D; Lihat</div>
+          </div>
+          <div class="design-body">
+            <div class="design-category">Logo &amp; Branding</div>
+            <div class="design-title">Brand Logo Collection</div>
+            <p class="design-desc">Koleksi logo modern untuk berbagai jenis bisnis &mdash; minimalis, bold, dan mudah diingat.</p>
+            <div class="design-tags">
+              <span class="tag tag-glass">Logo Design</span>
+              <span class="tag tag-glass">Vector</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card reveal delay-2" data-category="poster" data-lightbox data-src="img/design_poster.png">
+          <div class="design-preview">
+            <img src="img/design_poster.png" alt="Poster Design" loading="lazy" />
+            <div class="design-preview-overlay">&#x1F50D; Lihat</div>
+          </div>
+          <div class="design-body">
+            <div class="design-category">Poster &amp; Iklan</div>
+            <div class="design-title">Creative Poster Series</div>
+            <p class="design-desc">Desain poster kreatif yang menarik perhatian dan menyampaikan pesan dengan kuat.</p>
+            <div class="design-tags">
+              <span class="tag tag-glass">Poster</span>
+              <span class="tag tag-glass">Typography</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card reveal delay-3" data-category="identity" data-lightbox data-src="img/design_branding.png">
+          <div class="design-preview">
+            <img src="img/design_branding.png" alt="Brand Identity" loading="lazy" />
+            <div class="design-preview-overlay">&#x1F50D; Lihat</div>
+          </div>
+          <div class="design-body">
+            <div class="design-category">Brand Identity</div>
+            <div class="design-title">Complete Brand Package</div>
+            <p class="design-desc">Paket identitas brand lengkap &mdash; dari logo, kartu nama, hingga stationery kit profesional.</p>
+            <div class="design-tags">
+              <span class="tag tag-glass">Branding</span>
+              <span class="tag tag-glass">Stationery</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card reveal delay-1" data-category="logo" data-lightbox data-src="img/design_logo.png">
+          <div class="design-preview">
+            <img src="img/design_logo.png" alt="Logo 2" loading="lazy" style="filter:hue-rotate(30deg);" />
+            <div class="design-preview-overlay">&#x1F50D; Lihat</div>
+          </div>
+          <div class="design-body">
+            <div class="design-category">Logo &amp; Branding</div>
+            <div class="design-title">Startup Brand Identity</div>
+            <p class="design-desc">Identitas visual untuk startup teknologi &mdash; modern, dinamis, dan berkesan.</p>
+            <div class="design-tags">
+              <span class="tag tag-glass">Startup</span>
+              <span class="tag tag-glass">Digital</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card reveal delay-2" data-category="poster" data-lightbox data-src="img/design_poster.png">
+          <div class="design-preview">
+            <img src="img/design_poster.png" alt="Poster 2" loading="lazy" style="filter:hue-rotate(60deg);" />
+            <div class="design-preview-overlay">&#x1F50D; Lihat</div>
+          </div>
+          <div class="design-body">
+            <div class="design-category">Poster &amp; Iklan</div>
+            <div class="design-title">Event Promotion Design</div>
+            <p class="design-desc">Desain promosi event yang eye-catching untuk media digital dan cetak.</p>
+            <div class="design-tags">
+              <span class="tag tag-glass">Event</span>
+              <span class="tag tag-glass">Social Media</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card reveal delay-3" data-category="identity" data-lightbox data-src="img/design_branding.png">
+          <div class="design-preview">
+            <img src="img/design_branding.png" alt="Identity 2" loading="lazy" style="filter:hue-rotate(180deg);" />
+            <div class="design-preview-overlay">&#x1F50D; Lihat</div>
+          </div>
+          <div class="design-body">
+            <div class="design-category">Brand Identity</div>
+            <div class="design-title">Restaurant Branding</div>
+            <p class="design-desc">Identitas brand restoran premium yang mencerminkan kualitas dan keanggunan.</p>
+            <div class="design-tags">
+              <span class="tag tag-glass">Restaurant</span>
+              <span class="tag tag-glass">Premium</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x26A1; Proses Kerja</div>
+        <h2 class="section-title">Bagaimana Saya <span class="text-grad">Bekerja</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="process-grid">
+        <div class="process-step reveal delay-1">
+          <div class="step-num">01</div>
+          <div class="step-icon">&#x1F4AC;</div>
+          <div class="step-title">Brief &amp; Konsultasi</div>
+          <p class="step-desc">Memahami kebutuhan, target audience, dan visi Anda secara mendalam.</p>
+        </div>
+        <div class="process-step reveal delay-2">
+          <div class="step-num">02</div>
+          <div class="step-icon">&#x270F;&#xFE0F;</div>
+          <div class="step-title">Konsep &amp; Sketsa</div>
+          <p class="step-desc">Mengembangkan ide kreatif dan membuat sketsa konsep awal.</p>
+        </div>
+        <div class="process-step reveal delay-3">
+          <div class="step-num">03</div>
+          <div class="step-icon">&#x1F3A8;</div>
+          <div class="step-title">Desain &amp; Revisi</div>
+          <p class="step-desc">Eksekusi desain digital dengan revisi hingga Anda puas.</p>
+        </div>
+        <div class="process-step reveal delay-4">
+          <div class="step-num">04</div>
+          <div class="step-icon">&#x1F4E6;</div>
+          <div class="step-title">Pengiriman Final</div>
+          <p class="step-desc">Mengirimkan file dalam berbagai format siap pakai.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x1F6E0;&#xFE0F; Software</div>
+        <h2 class="section-title">Tools yang <span class="text-grad">Saya Gunakan</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="grid-4">
+        <div class="tool-item reveal delay-1">
+          <div class="tool-icon">&#x1F3AD;</div>
+          <div class="tool-name">Adobe Photoshop</div>
+          <div class="tool-sub">Photo Editing</div>
+        </div>
+        <div class="tool-item reveal delay-2">
+          <div class="tool-icon">&#x270C;&#xFE0F;</div>
+          <div class="tool-name">Adobe Illustrator</div>
+          <div class="tool-sub">Vector Design</div>
+        </div>
+        <div class="tool-item reveal delay-3">
+          <div class="tool-icon">&#x1F4D0;</div>
+          <div class="tool-name">Adobe InDesign</div>
+          <div class="tool-sub">Layout Design</div>
+        </div>
+        <div class="tool-item reveal delay-4">
+          <div class="tool-icon">&#x1F3AF;</div>
+          <div class="tool-name">Canva Pro</div>
+          <div class="tool-sub">Quick Design</div>
+        </div>
+        <div class="tool-item reveal delay-1">
+          <div class="tool-icon">&#x1F5BC;&#xFE0F;</div>
+          <div class="tool-name">Figma</div>
+          <div class="tool-sub">UI/UX Design</div>
+        </div>
+        <div class="tool-item reveal delay-2">
+          <div class="tool-icon">&#x1F308;</div>
+          <div class="tool-name">CorelDRAW</div>
+          <div class="tool-sub">Graphic Design</div>
+        </div>
+        <div class="tool-item reveal delay-3">
+          <div class="tool-icon">&#x1F3AC;</div>
+          <div class="tool-name">After Effects</div>
+          <div class="tool-sub">Motion Design</div>
+        </div>
+        <div class="tool-item reveal delay-4">
+          <div class="tool-icon">&#x1F4F1;</div>
+          <div class="tool-name">Lightroom</div>
+          <div class="tool-sub">Photo Retouching</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="text-align:center;background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="reveal">
+        <h2 class="section-title">Siap Tingkatkan Brand <span class="text-grad">Anda?</span></h2>
+        <p style="color:var(--w50);max-width:480px;margin:16px auto 36px;line-height:1.85;">Investasi pada desain yang baik adalah investasi terbaik untuk bisnis Anda. Hubungi saya sekarang!</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F4AC; Diskusi Proyek</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="btn btn-outline-purple">&#x1F4F1; WhatsApp Sekarang</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Nurzal <span>Kifli</span></span>
+          <p>Desainer grafis kreatif yang siap mewujudkan identitas visual impian brand Anda.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">&#x1F4F8;</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">&#x1F4AC;</a>
+            <a href="mailto:nurzalkifli.nk@gmail.com" class="social-icon" aria-label="Email">&#x2709;&#xFE0F;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Halaman</h4>
+          <a href="index.html">Home</a>
+          <a href="photography.html">Fotografi</a>
+          <a href="design.html">Desain Grafis</a>
+          <a href="contractor.html">Kontraktor</a>
+          <a href="about.html">Tentang Saya</a>
+          <a href="contact.html">Kontak</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener">@nurzalkifli</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener">087831258910</a>
+          <a href="mailto:nurzalkifli.nk@gmail.com">nurzalkifli.nk@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nurzal Kifli. All rights reserved.</p>
+        <p style="color:var(--purple-light);font-size:0.8rem;">Made with &#x2726; Passion</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Preview Desain">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Tutup">&#x2715;</button>
+    <img id="lightboxImg" src="" alt="Design Preview" />
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontraktor - Nurzal Kifli Portfolio</title>
+  <meta name="description" content="Jasa kontraktor profesional Nurzal Kifli - Pembangunan, Renovasi, dan Konstruksi berkualitas tinggi di Indonesia." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Project Cards */
+    .project-card {
+      border-radius:var(--r-lg); overflow:hidden;
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      backdrop-filter:blur(20px);
+      transition:var(--t);
+    }
+    .project-card:hover { border-color:var(--glass-bh); transform:translateY(-8px); box-shadow:0 20px 60px rgba(139,92,246,0.18); }
+    .project-img { height:260px; overflow:hidden; position:relative; }
+    .project-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease; }
+    .project-card:hover .project-img img { transform:scale(1.06); }
+    .project-badge { position:absolute; top:16px; left:16px; }
+    .project-body { padding:28px; }
+    .project-type { font-size:0.72rem; color:var(--purple-light); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+    .project-title { font-family:var(--fd); font-size:1.15rem; margin-bottom:10px; font-weight:700; }
+    .project-desc { color:var(--w50); font-size:0.875rem; line-height:1.75; margin-bottom:18px; }
+    .project-meta { display:flex; gap:18px; flex-wrap:wrap; }
+    .project-meta-item { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--w50); }
+    .project-meta-item .pm-icon { color:var(--purple-light); }
+
+    /* Service Feature */
+    .service-feature { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; padding:60px 0; border-bottom:1px solid var(--glass-b); }
+    .service-feature:last-child { border-bottom:none; }
+    .service-feature.reverse .feature-visual { order:-1; }
+    .feature-visual { border-radius:var(--r-xl); overflow:hidden; position:relative; }
+    .feature-visual img { width:100%; height:360px; object-fit:cover; }
+    .feature-visual::after {
+      content:''; position:absolute; inset:0;
+      border:1px solid rgba(139,92,246,0.2);
+      border-radius:var(--r-xl); pointer-events:none;
+    }
+    .feature-content h3 { font-size:1.8rem; margin-bottom:14px; font-weight:800; }
+    .feature-content p { color:var(--w50); line-height:1.85; margin-bottom:22px; }
+    .feature-list { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+    .feature-list-item { display:flex; align-items:flex-start; gap:10px; font-size:0.9rem; color:var(--w70); }
+    .feature-list-item::before { content:'\2713'; color:var(--purple-light); font-weight:700; flex-shrink:0; margin-top:1px; }
+
+    /* Why Cards */
+    .why-card { padding:30px; background:var(--glass); border:1px solid var(--glass-b); border-radius:var(--r-lg); backdrop-filter:blur(16px); transition:var(--t); }
+    .why-card:hover { border-color:var(--glass-bh); transform:translateY(-4px); box-shadow:var(--glow-s); }
+    .why-icon { font-size:2.2rem; margin-bottom:14px; }
+    .why-title { font-family:var(--fd); font-size:1.1rem; margin-bottom:10px; font-weight:700; }
+    .why-desc { color:var(--w50); font-size:0.875rem; line-height:1.75; }
+
+    /* Consult Banner */
+    .consult-banner {
+      background:rgba(139,92,246,0.06);
+      border:1px solid var(--glass-b);
+      border-radius:var(--r-2x);
+      padding:60px; text-align:center;
+      backdrop-filter:blur(20px);
+      position:relative; overflow:hidden;
+    }
+    .consult-banner::before {
+      content:''; position:absolute; top:-1px; left:50%; transform:translateX(-50%);
+      width:200px; height:1px;
+      background:linear-gradient(90deg, transparent, var(--purple), transparent);
+    }
+
+    @media (max-width:768px) {
+      .service-feature { grid-template-columns:1fr; gap:30px; padding:40px 0; }
+      .service-feature.reverse .feature-visual { order:0; }
+      .feature-visual img { height:240px; }
+      .consult-banner { padding:36px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Nurzal <span>Kifli</span></a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Buka Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <button class="nav-close-btn" id="navClose" aria-label="Tutup Menu">&#x2715;</button>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="photography.html">Fotografi</a></li>
+        <li><a href="design.html">Desain Grafis</a></li>
+        <li><a href="contractor.html" class="active">Kontraktor</a></li>
+        <li><a href="about.html">Tentang</a></li>
+        <li><a href="contact.html" class="nav-cta">Hubungi Saya</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <div class="page-hero-tag">&#x1F3D7;&#xFE0F; Jasa Kontraktor</div>
+        <h1>Membangun <span class="text-grad">Impian Anda</span></h1>
+        <p>Konstruksi berkualitas tinggi dengan tenaga ahli berpengalaman. Dari pondasi hingga finishing, kami pastikan setiap detail sempurna sesuai standar terbaik.</p>
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F4CB; Konsultasi Gratis</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="btn btn-glass">&#x1F4F1; WhatsApp Langsung</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section" style="padding:60px 0;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--glass-b);border-radius:var(--r-lg);overflow:hidden;">
+        <div class="stat-card"><div class="stat-number" data-target="50" data-suffix="+">0+</div><div class="stat-label">Proyek Selesai</div></div>
+        <div class="stat-card"><div class="stat-number" data-target="4" data-suffix="+">0+</div><div class="stat-label">Tahun Pengalaman</div></div>
+        <div class="stat-card"><div class="stat-number" data-target="98" data-suffix="%">0%</div><div class="stat-label">Kepuasan Klien</div></div>
+        <div class="stat-card"><div class="stat-number" data-target="0" data-suffix="">0</div><div class="stat-label">Hari Terlambat</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">&#x1F3C6; Portfolio</div>
+        <h2 class="section-title">Proyek <span class="text-grad">Unggulan</span></h2>
+        <div class="divider"></div>
+        <p class="section-subtitle">Beberapa proyek terbaik yang telah berhasil kami selesaikan dengan standar kualitas tertinggi.</p>
+      </div>
+      <div class="grid-2">
+        <div class="project-card reveal delay-1" data-lightbox data-src="img/construction_project.png">
+          <div class="project-img">
+            <img src="img/construction_project.png" alt="Rumah Modern" loading="lazy" />
+            <div class="project-badge"><span class="tag tag-purple">Selesai</span></div>
+          </div>
+          <div class="project-body">
+            <div class="project-type">Konstruksi Residensial</div>
+            <div class="project-title">Rumah Modern Minimalis</div>
+            <p class="project-desc">Pembangunan rumah tinggal dua lantai dengan desain modern minimalis. Luas bangunan 180m&sup2; dengan material premium dan finishing berkualitas tinggi.</p>
+            <div class="project-meta">
+              <div class="project-meta-item"><span class="pm-icon">&#x1F4CD;</span> <span>Kota Makassar</span></div>
+              <div class="project-meta-item"><span class="pm-icon">&#x1F4C5;</span> <span>2024</span></div>
+              <div class="project-meta-item"><span class="pm-icon">&#x1F4D0;</span> <span>180 m&sup2;</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card reveal delay-2" data-lightbox data-src="img/construction_interior.png">
+          <div class="project-img">
+            <img src="img/construction_interior.png" alt="Interior Mewah" loading="lazy" />
+            <div class="project-badge"><span class="tag tag-purple">Selesai</span></div>
+          </div>
+          <div class="project-body">
+            <div class="project-type">Renovasi Interior</div>
+            <div class="project-title">Renovasi Interior Mewah</div>
+            <p class="project-desc">Renovasi total interior hunian eksklusif. Pengerjaan meliputi seluruh area &mdash; living room, dapur, kamar tidur, dan kamar mandi.</p>
+            <div class="project-meta">
+              <div class="project-meta-item"><span class="pm-icon">&#x1F4CD;</span> <span>Kota Makassar</span></div>
+              <div class="project-meta-item"><span class="pm-icon">&#x1F4C5;</span> <span>2023</span></div>
+              <div class="project-meta-item"><span class="pm-icon">&#x1F4D0;</span> <span>120 m&sup2;</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Feature -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">&#x1F6E0;&#xFE0F; Layanan</div>
+        <h2 class="section-title">Apa yang <span class="text-grad">Kami Kerjakan</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="service-feature reveal">
+        <div class="feature-visual">
+          <img src="img/construction_project.png" alt="Pembangunan Baru" loading="lazy" />
+        </div>
+        <div class="feature-content">
+          <span class="tag tag-purple" style="margin-bottom:16px;display:inline-block;">&#x1F3E0; Layanan Utama</span>
+          <h3>Pembangunan <span class="text-grad">Baru</span></h3>
+          <p>Membangun dari nol hunian impian Anda dengan material terbaik, tenaga ahli berpengalaman, dan pengawasan ketat di setiap tahapan konstruksi.</p>
+          <div class="feature-list">
+            <div class="feature-list-item">Konsultasi desain dan perencanaan anggaran</div>
+            <div class="feature-list-item">Pengerjaan pondasi dan struktur bangunan</div>
+            <div class="feature-list-item">Instalasi listrik, air, dan AC</div>
+            <div class="feature-list-item">Finishing interior dan eksterior premium</div>
+            <div class="feature-list-item">Garansi pekerjaan 1 tahun</div>
+          </div>
+          <a href="contact.html" class="btn btn-purple">Konsultasi Sekarang &#x2192;</a>
+        </div>
+      </div>
+      <div class="service-feature reverse reveal">
+        <div class="feature-content">
+          <span class="tag tag-purple" style="margin-bottom:16px;display:inline-block;">&#x1F528; Renovasi</span>
+          <h3>Renovasi &amp; <span class="text-grad">Perbaikan</span></h3>
+          <p>Transformasikan hunian lama Anda menjadi ruang yang segar, modern, dan fungsional. Kami menangani renovasi skala kecil hingga total renovation.</p>
+          <div class="feature-list">
+            <div class="feature-list-item">Renovasi kamar mandi dan dapur</div>
+            <div class="feature-list-item">Pengecatan ulang interior dan eksterior</div>
+            <div class="feature-list-item">Pemasangan keramik dan granit</div>
+            <div class="feature-list-item">Perbaikan atap dan plafon</div>
+            <div class="feature-list-item">Renovasi total hunian</div>
+          </div>
+          <a href="contact.html" class="btn btn-purple">Minta Penawaran &#x2192;</a>
+        </div>
+        <div class="feature-visual">
+          <img src="img/construction_interior.png" alt="Renovasi Interior" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x2B50; Keunggulan</div>
+        <h2 class="section-title">Mengapa Memilih <span class="text-grad">Kami?</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="grid-3">
+        <div class="why-card reveal delay-1"><div class="why-icon">&#x23F0;</div><div class="why-title">Tepat Waktu</div><p class="why-desc">Berkomitmen menyelesaikan setiap proyek sesuai jadwal yang disepakati tanpa kompromi kualitas.</p></div>
+        <div class="why-card reveal delay-2"><div class="why-icon">&#x2705;</div><div class="why-title">Kualitas Terjamin</div><p class="why-desc">Menggunakan material pilihan dan metode konstruksi standar terbaik untuk hasil yang tahan lama.</p></div>
+        <div class="why-card reveal delay-3"><div class="why-icon">&#x1F4B0;</div><div class="why-title">Harga Transparan</div><p class="why-desc">Penawaran harga yang jelas dan transparan. Tidak ada biaya tersembunyi &mdash; semua tertulis di RAB.</p></div>
+        <div class="why-card reveal delay-1"><div class="why-icon">&#x1F477;</div><div class="why-title">Tenaga Ahli</div><p class="why-desc">Tim tukang dan pekerja berpengalaman dengan keahlian khusus di bidangnya masing-masing.</p></div>
+        <div class="why-card reveal delay-2"><div class="why-icon">&#x1F4CB;</div><div class="why-title">RAB Lengkap</div><p class="why-desc">Rencana Anggaran Biaya yang detail dan komprehensif sebelum pekerjaan dimulai.</p></div>
+        <div class="why-card reveal delay-3"><div class="why-icon">&#x1F6E1;&#xFE0F;</div><div class="why-title">Garansi Pekerjaan</div><p class="why-desc">Garansi 1 tahun untuk setiap pekerjaan konstruksi. Kepuasan Anda adalah prioritas kami.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="consult-banner reveal">
+        <div class="section-label" style="justify-content:center;margin-bottom:20px;">&#x1F3E0; Mulai Proyek Anda</div>
+        <h2 class="section-title" style="margin-bottom:14px;">Wujudkan Rumah <span class="text-grad">Impian Anda</span></h2>
+        <p style="color:var(--w50);max-width:480px;margin:0 auto 32px;line-height:1.85;">Konsultasi awal GRATIS. Hubungi kami sekarang dan dapatkan penawaran terbaik untuk proyek konstruksi Anda.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F4CB; Isi Form Konsultasi</a>
+          <a href="https://wa.me/6287831258910?text=Halo%20Nurzal,%20saya%20ingin%20konsultasi%20proyek%20konstruksi" target="_blank" rel="noopener" class="btn btn-outline-purple">&#x1F4AC; Chat WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Nurzal <span>Kifli</span></span>
+          <p>Kontraktor profesional dengan pengalaman luas dalam pembangunan dan renovasi hunian berkualitas.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">&#x1F4F8;</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">&#x1F4AC;</a>
+            <a href="mailto:nurzalkifli.nk@gmail.com" class="social-icon" aria-label="Email">&#x2709;&#xFE0F;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Halaman</h4>
+          <a href="index.html">Home</a>
+          <a href="photography.html">Fotografi</a>
+          <a href="design.html">Desain Grafis</a>
+          <a href="contractor.html">Kontraktor</a>
+          <a href="about.html">Tentang Saya</a>
+          <a href="contact.html">Kontak</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener">@nurzalkifli</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener">087831258910</a>
+          <a href="mailto:nurzalkifli.nk@gmail.com">nurzalkifli.nk@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nurzal Kifli. All rights reserved.</p>
+        <p style="color:var(--purple-light);font-size:0.8rem;">Made with &#x2726; Passion</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Preview Proyek">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Tutup">&#x2715;</button>
+    <img id="lightboxImg" src="" alt="Project Preview" />
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
