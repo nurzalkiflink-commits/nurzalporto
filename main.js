@@ -13,6 +13,8 @@ const i18n = {
     'nav.design': 'Desain Grafis',
     'nav.contractor': 'Kontraktor',
     'nav.about': 'Tentang',
+    'nav.projects': 'Projects',
+    'nav.tutorial': 'Tutorial Ai',
     'nav.contact': 'Hubungi Saya',
 
     // Footer
@@ -262,6 +264,7 @@ const i18n = {
     'nav.photography': 'Photography',
     'nav.design': 'Graphic Design',
     'nav.contractor': 'Contractor',
+    'nav.projects': 'Projects',
     'nav.about': 'About',
     'nav.contact': 'Contact Me',
 

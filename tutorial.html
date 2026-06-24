@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Web Portofolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN (Penting: Dimuat lebih dulu) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable class-based dark mode
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6', // Violet
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        accent: {
+                            500: '#d946ef', // Fuchsia
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'soft-dark': '0 10px 40px -10px rgba(0,0,0,0.5)',
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* Base transitions untuk memastikan warna background berubah dengan mulus */
+        body {
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Pattern background yang transparan, agar warna dari Tailwind (bg-slate-50/900) tetap terlihat */
+        .bg-pattern {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: radial-gradient(rgba(148, 163, 184, 0.25) 2px, transparent 2px);
+            background-size: 32px 32px;
+            background-position: -16px -16px;
+        }
+        
+        /* Pattern saat mode gelap */
+        .dark .bg-pattern {
+            background-image: radial-gradient(rgba(203, 213, 225, 0.05) 2px, transparent 2px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Language Toggle Logic */
+        html[lang="en"] .lang-id { display: none !important; }
+        html[lang="id"] .lang-en { display: none !important; }
+    </style>
+
+    <script>
+        // Check for saved theme preference or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Check for saved language preference
+        if (localStorage.getItem('lang')) {
+            document.documentElement.lang = localStorage.getItem('lang');
+        } else {
+            document.documentElement.lang = 'id'; // Default language
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        function toggleLanguage() {
+            const currentLang = document.documentElement.lang;
+            const newLang = currentLang === 'id' ? 'en' : 'id';
+            document.documentElement.lang = newLang;
+            localStorage.setItem('lang', newLang);
+        }
+
+        function copyPrompt(button) {
+            const promptText = button.parentElement.nextElementSibling.innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = promptText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            textArea.remove();
+
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            button.classList.add('bg-green-100', 'text-green-700', 'border-green-300', 'dark:bg-green-900/30', 'dark:text-green-400', 'dark:border-green-800');
+            
+            setTimeout(() => {
+                button.innerText = originalText;
+                button.classList.remove('bg-green-100', 'text-green-700', 'border-green-300', 'dark:bg-green-900/30', 'dark:text-green-400', 'dark:border-green-800');
+            }, 2000);
+        }
+
+        // --- SCRIPT ANTI INSPECT ELEMENT ---
+        
+        // Fungsi untuk menampilkan notifikasi kustom
+        function showInspectWarning() {
+            const warningEl = document.getElementById('inspect-warning');
+            if (warningEl) {
+                warningEl.classList.remove('translate-y-[150%]', 'opacity-0');
+                warningEl.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    warningEl.classList.add('translate-y-[150%]', 'opacity-0');
+                    warningEl.classList.remove('translate-y-0', 'opacity-100');
+                }, 3000);
+            }
+        }
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showInspectWarning();
+        });
+
+        document.onkeydown = function(e) {
+            if(e.keyCode === 123 || 
+              (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+              (e.ctrlKey && e.shiftKey && e.keyCode === 74) || 
+              (e.ctrlKey && e.keyCode === 85)) {
+                showInspectWarning();
+                return false;
+            }
+        };
+    </script>
+</head>
+
+<body class="antialiased bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 selection:bg-brand-500/30 selection:text-brand-700 dark:selection:text-brand-200 min-h-screen relative overflow-x-hidden">
+
+    <!-- Inspect Element Warning Notification -->
+    <div id="inspect-warning" class="fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-[150%] opacity-0 z-[100] flex items-center gap-4 px-6 py-4 rounded-2xl bg-red-600/95 dark:bg-red-500/95 backdrop-blur-md text-white shadow-2xl transition-all duration-300 pointer-events-none border border-red-400/30 w-[90%] max-w-sm sm:w-auto">
+        <i class="ph ph-warning-octagon text-3xl shrink-0"></i>
+        <div class="flex flex-col">
+            <span class="font-bold tracking-wide lang-id">Akses Ditolak</span>
+            <span class="font-bold tracking-wide lang-en">Access Denied</span>
+            <span class="text-sm text-red-100 lang-id">Fitur Inspect Element telah dinonaktifkan.</span>
+            <span class="text-sm text-red-100 lang-en">Inspect Element feature has been disabled.</span>
+        </div>
+    </div>
+
+    <!-- Background Pattern -->
+    <div class="bg-pattern fixed w-full h-full pointer-events-none"></div>
+
+    <!-- Floating Actions Container -->
+    <div class="fixed top-6 right-6 z-50 flex items-center gap-3">
+        <!-- Language Toggle Button -->
+        <button onclick="toggleLanguage()" class="flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-brand-400 hover:scale-110 transition-all duration-300 outline-none font-bold font-mono">
+            <span class="lang-id">ID</span>
+            <span class="lang-en">EN</span>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button onclick="toggleTheme()" class="flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:scale-110 transition-all duration-300 group outline-none">
+            <i class="ph ph-sun text-2xl hidden dark:block group-hover:rotate-45 transition-transform duration-300"></i>
+            <i class="ph ph-moon text-2xl block dark:hidden group-hover:-rotate-12 transition-transform duration-300"></i>
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-5 py-16 sm:py-24 flex flex-col gap-24 relative z-10">
+        
+        <!-- Header / Intro -->
+        <header class="text-center mb-4 mt-8 sm:mt-0">
+            <div class="inline-block px-4 py-1.5 rounded-full bg-brand-100 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 text-sm font-bold tracking-wide mb-6">
+                <span class="lang-id">TUTORIAL PROMPT AI</span>
+                <span class="lang-en">AI PROMPT TUTORIAL</span>
+            </div>
+            <h1 class="font-display text-5xl sm:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6">
+                <span class="lang-id">Website Portofolio <br/></span>
+                <span class="lang-en">Portfolio Website <br/></span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-accent-500">Entrepreneur</span>
+            </h1>
+            <p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                <span class="lang-id">Panduan lengkap membuat website portofolio interaktif dan mewah hanya bermodalkan prompt untuk AI (Claude,Gemini,ChatGpt).</span>
+                <span class="lang-en">A complete guide to building an interactive and luxurious portfolio website using only AI prompts (Claude, Gemini, ChatGPT).</span>
+            </p>
+        </header>
+
+        <!-- SECTION 00: Pondasi -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">00</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Pondasi: Tema, Warna & Font</span>
+                    <span class="lang-en">Foundation: Theme, Colors & Fonts</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Prompt pembuka yang menentukan <span class="font-bold text-slate-900 dark:text-white">"rasa"</span> seluruh website: latar gelap plum, aksen gradien Red Ochre→amber flame, dan tipografi tebal. Selalu kasih ini paling pertama supaya semua section setelahnya konsisten.</span>
+                <span class="lang-en">The opening prompt that defines the <span class="font-bold text-slate-900 dark:text-white">"vibe"</span> of the entire website: dark plum background, Red Ochre→amber flame gradient accents, and bold typography. Always apply this first so all subsequent sections are visually consistent.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-accent-500 shadow-[0_0_10px_rgba(217,70,239,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">
+                            <span class="lang-id">PROMPT 0 - PONDASI</span>
+                            <span class="lang-en">PROMPT 0 - FOUNDATION</span>
+                        </span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buatkan satu halaman website personal (portofolio entrepreneur) dengan tema gelap mewah: background merah nyaris hitam (#9d0208), teks putih, dengan aksen gradien dari Red Ochre (#dc2f02) ke amber flame (#ffba08) untuk highlight dan tombol. Pakai font Inter (judul tebal 800–900, huruf rapat/tight) dipadu JetBrains Mono untuk label kecil. Tambahkan grain halus, glow radial lembut di latar, dan sudut-sudut membulat besar (rounded) pada kartu. Buat semua ukuran teks besar dan berani, dan pastikan responsif untuk HP.</span>
+                    <span class="lang-en">Create a single-page personal website (entrepreneur portfolio) with a luxurious dark theme: dark red background almost black (#9d0208), white text, with gradient accents from Red Ochre (#dc2f02) to amber flame (#ffba08) for highlights and buttons. Use the Inter font (bold headings 800-900, tight spacing) combined with JetBrains Mono for small labels. Add fine grain, soft radial glow in the background, and large rounded corners on cards. Make all text sizes large and bold, and ensure it is fully mobile-responsive.</span>
+                </p>
+            </div>
+
+            <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-info text-2xl text-brand-500 dark:text-brand-400 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-brand-700 dark:text-brand-300">Catatan tema:</span> Sebut <span class="italic text-slate-800 dark:text-slate-200">warna spesifik</span> dan <span class="italic text-slate-800 dark:text-slate-200">nama font</span> di awal seperti ini. Itu kunci kenapa hasilnya konsisten — kalau nggak disebut, Claude akan menebak dan tiap section bisa beda gaya.</span>
+                    <span class="lang-en"><span class="font-bold text-brand-700 dark:text-brand-300">Theme note:</span> Mention <span class="italic text-slate-800 dark:text-slate-200">specific colors</span> and <span class="italic text-slate-800 dark:text-slate-200">font names</span> at the beginning like this. That's the secret to consistency — if you don't declare it, the AI will guess and each section might end up with a different style.</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Latar gelap + glow</span><span class="lang-en">Dark background + glow</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Gradien Red Ochre→amber flame</span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Font Inter + JetBrains Mono</span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Grain halus</span><span class="lang-en">Fine grain</span></span>
+            </div>
+        </section>
+
+        <!-- SECTION 01: Navigasi -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">01</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Navigasi (Header)</span>
+                    <span class="lang-en">Navigation (Header)</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Bar atas yang <span class="font-bold text-slate-900 dark:text-white">menempel saat di-scroll</span> dengan efek kaca buram.</span>
+                <span class="lang-en">Top bar that <span class="font-bold text-slate-900 dark:text-white">sticks on scroll</span> with a frosted glass effect.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 1 - NAV</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat navbar sticky di paling atas dengan efek kaca buram (blur). Kiri: logo berupa kotak gradien Red Ochre-amber flame dengan inisial, lalu nama. Tengah: menu (Journey, About, Contact) huruf kapital kecil. Kanan: tombol pill gradien "Hire me". Di HP, sembunyikan menu dan ganti dengan ikon hamburger.</span>
+                    <span class="lang-en">Create a sticky navbar at the top with a frosted glass (backdrop blur) effect. Left: logo as a Red Ochre-amber flame gradient box with initials, followed by the name. Center: menu links (Journey, About, Contact) in small caps. Right: gradient pill button "Hire me". On mobile view, hide the menu links and replace them with a hamburger menu icon.</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Sticky + backdrop blur</span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Logo badge gradien</span><span class="lang-en">Gradient logo badge</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Tombol pill</span><span class="lang-en">Pill button</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Responsif (hamburger)</span><span class="lang-en">Responsive (hamburger)</span></span>
+            </div>
+        </section>
+
+        <!-- SECTION 02: Hero -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">02</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Hero Section — Kartu Flip Scroll</span>
+                    <span class="lang-en">Hero Section — Flip Scroll Card</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Bagian pembuka: judul raksasa di kiri, dan di kanan ada <span class="font-bold text-slate-900 dark:text-white">kartu rose-gold yang membalik (flip 3D) saat di-scroll</span> untuk memperlihatkan foto kamu.</span>
+                <span class="lang-en">The opening section: giant title on the left, and on the right is a <span class="font-bold text-slate-900 dark:text-white">rose-gold card that flips (3D flip) on scroll</span> to reveal your photo.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 2 - HERO</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat hero dua kolom. Kiri: badge kecil di atas ("Street-tested • Battle-proven"), judul raksasa (clamp sampai ~108px) dengan satu kata di-highlight gradien, sub-judul, dan tombol gradien "Follow my journey". Kanan: sebuah kartu portrait dengan rasio 4:5. Buat kartu ini terkunci di layar (sticky/pinned) saat di-scroll, dan ber-flip 3D di sumbu Y: sisi depan permukaan rose-gold metalik mengilap (ada shimmer bergerak), lalu membalik menampilkan foto saya di sisi belakang. Tambahkan 2 kartu statistik mengambang di pojok kartu.</span>
+                    <span class="lang-en">Create a two-column hero layout. Left column: small badge at the top ("Street-tested • Battle-proven"), giant headline (clamp size up to ~108px) with one specific word highlighted by a gradient, a sub-title, and a gradient button saying "Follow my journey". Right column: a portrait card with a 4:5 aspect ratio. Make this card scroll-locked (sticky/pinned) as the user scrolls, triggering a 3D Y-axis flip: the front side is a shiny metallic rose-gold surface (with a moving shimmer animation), which flips to reveal my photo on the back side. Add 2 floating statistic cards positioned at the corners.</span>
+                </p>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-camera text-2xl text-amber-600 dark:text-amber-500 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-amber-700 dark:text-amber-500">Siapkan:</span> foto portrait kamu (potret, rasio tegak) + 2 angka pencapaian singkat untuk floating card.</span>
+                    <span class="lang-en"><span class="font-bold text-amber-700 dark:text-amber-500">Prepare:</span> your portrait photo (vertical ratio) + 2 brief achievement numbers for the floating cards.</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Scroll-locked (pinned)</span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Flip 3D rose-gold → foto</span><span class="lang-en">3D flip rose-gold → photo</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Shimmer metalik bergerak</span><span class="lang-en">Moving metallic shimmer</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Floating stat cards</span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Marquee teks berjalan</span><span class="lang-en">Scrolling text marquee</span></span>
+            </div>
+        </section>
+
+        <!-- SECTION 03: Angka Besar -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">03</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Angka Besar 50M Section — Dive Warp 3D</span>
+                    <span class="lang-en">Big Numbers 50M Section — 3D Dive Warp</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Satu angka pencapaian raksasa yang <span class="font-bold text-slate-900 dark:text-white">"terbang" dari kedalaman</span> ke arah kamera lewat lorong cahaya, lalu angkanya menghitung naik dan meledakkan confetti.</span>
+                <span class="lang-en">One giant achievement number that <span class="font-bold text-slate-900 dark:text-white">"flies" from the depths</span> towards the camera through a tunnel of light, then the numbers count up and explode confetti.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 3 - NUMBERS</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat section angka pencapaian dalam efek "warp tunnel" 3D. Saat di-scroll masuk, layar terkunci sebentar dan angka besar (mis. "Rp 50 Miliyar") terbang dari jauh di kedalaman (translateZ) menuju kamera, dikelilingi cincin tunnel yang mengembang dan beam cahaya yang melintas. Begitu angka mendarat di tengah dan tajam, jalankan animasi count-up (0 naik ke angka tujuannya) lalu ledakkan confetti Red Ochre-amber flame. Di bawahnya beri caption kecil sebagai keterangan angka itu.</span>
+                    <span class="lang-en">Create an achievement numbers section with a 3D "warp tunnel" effect. As it scrolls into view, lock the screen briefly and make a giant number (e.g. "$50 Million") fly from deep within the background (Z-axis translation) towards the camera, surrounded by expanding tunnel rings and passing light beams. Once the number lands sharply in the center, run a count-up animation (from 0 to the target number) and then burst Red Ochre-amber flame colored confetti. Place a small descriptive caption underneath the number.</span>
+                </p>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-target text-2xl text-amber-600 dark:text-amber-500 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-amber-700 dark:text-amber-500">Siapkan:</span> 1 angka "wow" utama + keterangannya (mis. total spend ads, omzet, jumlah klien).</span>
+                    <span class="lang-en"><span class="font-bold text-amber-700 dark:text-amber-500">Prepare:</span> 1 main "wow" number + its description (e.g., total ad spend, revenue, number of clients).</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 04: Galeri Foto -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">04</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Galeri Foto Section — & Pergantian Tema</span>
+                    <span class="lang-en">Photo Gallery Section — & Theme Switch</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Grid foto momen penting. Trik spesial: <span class="font-bold text-slate-900 dark:text-white">saat bagian ini masuk layar, seluruh tema berganti dari gelap (malam) ke terang (krem hangat/siang)</span> dengan transisi mulus, lalu balik gelap setelah lewat.</span>
+                <span class="lang-en">Grid of important moment photos. Special trick: <span class="font-bold text-slate-900 dark:text-white">when this section enters the screen, the entire theme changes from dark (night) to light (warm cream/day)</span> with a seamless transition, then reverts to dark once scrolled past.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 4 - META VISIT</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat section galeri foto dengan judul di tengah, tag kecil di atas, dan sub-judul gaya serif italic. Di bawahnya grid 2 kolom berisi foto (rasio 1:1, sudut membulat) dengan caption pill di pojok bawah tiap foto, dan efek zoom halus saat hover. Yang penting: saat section ini masuk ke layar, ubah seluruh palet website dari mode gelap (plum) ke mode terang (background krem hangat #fdf1e3, teks coklat tua) dengan transisi warna yang mulus, lalu kembali ke mode gelap begitu user scroll melewatinya. Aksen gradien Red Ochre-amber flame tetap sama di kedua mode.</span>
+                    <span class="lang-en">Create a photo gallery section with a centered title, a small tag above it, and an italic serif sub-title. Below it, a 2-column grid containing photos (1:1 ratio, rounded corners) with a pill-shaped caption in the bottom corner of each photo, and a smooth zoom effect on hover. Crucially: when this section scrolls into the viewport, smoothly transition the entire website's color palette from dark mode to light mode (warm cream background #fdf1e3, dark brown text), and smoothly transition back to dark mode once the user scrolls past it. The Red Ochre-amber flame gradient accents must remain consistent in both modes.</span>
+                </p>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-images text-2xl text-amber-600 dark:text-amber-500 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-amber-700 dark:text-amber-500">Siapkan:</span> 2-4 foto momen penting (event, undangan, penghargaan, dll).</span>
+                    <span class="lang-en"><span class="font-bold text-amber-700 dark:text-amber-500">Prepare:</span> 2-4 photos of important moments (events, invitations, awards, etc).</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Transisi tema malam→siang</span><span class="lang-en">Night→Day theme transition</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Grid foto + caption pill</span><span class="lang-en">Photo grid + pill caption</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Hover zoom</span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">color-mix mulus (oklab)</span><span class="lang-en">smooth color-mix (oklab)</span></span>
+            </div>
+        </section>
+
+        <!-- SECTION 05: About -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">05</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">About Section — Manifesto Kinetik</span>
+                    <span class="lang-en">About Section — Kinetic Manifesto</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Pernyataan keyakinan / filosofi kamu, di mana <span class="font-bold text-slate-900 dark:text-white">tiap kata muncul satu per satu (fade + blur)</span> saat di-scroll, jadi terasa hidup.</span>
+                <span class="lang-en">Your belief statement / philosophy, where <span class="font-bold text-slate-900 dark:text-white">each word appears one by one (fade + blur)</span> on scroll, making it feel alive.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 5 - MANIFESTO</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat section "manifesto" dalam satu panel besar: 2-3 paragraf pernyataan keyakinan saya sebagai entrepreneur, teks besar dan berwibawa. Buat tiap kata muncul satu per satu dengan efek fade-in + un-blur secara berurutan saat paragraf masuk ke layar (kinetic text). Kalimat penutup dibuat lebih besar dan tegas, dengan beberapa kata di-highlight gradien dan diberi glow saat muncul.</span>
+                    <span class="lang-en">Create a "manifesto" section within one large panel: 2-3 paragraphs stating my core beliefs as an entrepreneur, using large, authoritative text. Make each word appear one by one sequentially with a combined fade-in and un-blur effect as the paragraph enters the viewport (kinetic text typography). Make the closing sentence larger and bolder, with specific words highlighted by a gradient and a soft glow effect upon appearance.</span>
+                </p>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-text-aa text-2xl text-amber-600 dark:text-amber-500 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-amber-700 dark:text-amber-500">Siapkan:</span> 2-3 kalimat prinsip/filosofi kamu + satu kalimat penutup yang kuat.</span>
+                    <span class="lang-en"><span class="font-bold text-amber-700 dark:text-amber-500">Prepare:</span> 2-3 sentences of your principles/philosophy + one strong closing statement.</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 06: Time Tunnel -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">06</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Time Tunnel Section — Lorong Waktu</span>
+                    <span class="lang-en">Time Tunnel Section</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Transisi sinematik sebelum timeline: <span class="font-bold text-slate-900 dark:text-white">kamera "berjalan" menyusuri lorong waktu</span>, melewati penanda tahun & foto kenangan yang melayang, lalu tulisan "The Journey" muncul dari kedalaman.</span>
+                <span class="lang-en">Cinematic transition before the timeline: <span class="font-bold text-slate-900 dark:text-white">the camera "walks" through a time tunnel</span>, passing floating year markers & memory photos, then the text "The Journey" appears from the depths.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 6 - TIME TUNNEL</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Sebelum bagian timeline, buat transisi 3D sinematik "lorong waktu". Saat di-scroll, layar terkunci dan kamera bergerak maju menembus kedalaman (Z): penanda tahun (mis. 2011 → 2018 → NOW) dan foto polaroid melayang melewati kamera di sisi kiri-kanan bergantian, dengan rel horizontal yang menyempit ke titik hilang untuk kesan gerak. Di titik terdalam, judul "The Journey" muncul dari jauh dan mendarat di tengah. Pakai mode gelap.</span>
+                    <span class="lang-en">Before the timeline section, create a cinematic 3D "time tunnel" transition. On scroll, lock the screen and make the camera move forward through depth (Z-axis): year markers (e.g. 2011 → 2018 → NOW) and floating polaroid photos pass the camera alternating on the left and right, with horizontal rails narrowing to a vanishing point for a sense of speed. At the deepest point, the title "The Journey" emerges from the distance and lands in the center. Enforce dark mode for this part.</span>
+                </p>
+            </div>
+
+            <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-lightbulb text-2xl text-brand-500 dark:text-brand-400 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-brand-700 dark:text-brand-300">Tips:</span> Ini efek paling "berat". Kalau Claude bikin terlalu rumit/error, minta: <span class="italic text-slate-800 dark:text-slate-200">"sederhanakan, cukup beberapa tahun dan foto saja, yang penting smooth."</span></span>
+                    <span class="lang-en"><span class="font-bold text-brand-700 dark:text-brand-300">Tips:</span> This is the "heaviest" effect. If the AI generates overly complex/broken code, ask it to: <span class="italic text-slate-800 dark:text-slate-200">"simplify it, just use a few years and photos, the most important thing is that it runs smoothly."</span></span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Dolly kamera 3D</span><span class="lang-en">3D Camera Dolly</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Polaroid melayang</span><span class="lang-en">Floating polaroids</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Rel perspektif</span><span class="lang-en">Perspective rails</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Judul muncul dari depth</span><span class="lang-en">Title emerges from depth</span></span>
+            </div>
+        </section>
+
+        <!-- SECTION 07: Journey -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">07</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Journey Section — Kartu Perjalanan</span>
+                    <span class="lang-en">Journey Section — Journey Cards</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Inti cerita: grid kartu per tahun (bisnis yang dicoba, hasilnya, pelajarannya), dengan <span class="font-bold text-slate-900 dark:text-white">border bercahaya berputar</span>, satu kartu "featured" menonjol, dan scrubber tahun yang menempel.</span>
+                <span class="lang-en">The core story: a grid of cards mapped by year (businesses attempted, outcomes, lessons learned), featuring <span class="font-bold text-slate-900 dark:text-white">rotating glowing borders</span>, one standout "featured" card, and a sticky year scrubber.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 7 - JOURNEY CARDS</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat section timeline berupa grid kartu 3 kolom. Tiap kartu = satu babak bisnis: ada tag, tahun besar, ikon, judul usaha, deskripsi singkat, dan baris bawah berisi label + hasil (hijau kalau untung/positif, merah kalau gagal, italic untuk "pelajaran"). Beri border gradien yang bercahaya dan berputar saat kartu masuk layar, efek spotlight mengikuti kursor, dan tilt 3D halus saat hover. Satu kartu pencapaian terbesar dibuat "featured" (background gradien penuh Red Ochre-amber flame) dengan reveal sinematik. Tambahkan scrubber tahun yang sticky di atas untuk loncat antar tahun.</span>
+                    <span class="lang-en">Create a timeline section organized as a 3-column card grid. Each card represents a business chapter, containing: a tag, a large year, an icon, the business title, a short description, and a bottom row containing a label + result (green for profit/success, red for failure, italic for "lesson learned"). Add a glowing gradient border that continuously rotates when the card is visible, a cursor spotlight hover effect, and a subtle 3D tilt interaction. Make one major milestone card "featured" (using a full Red Ochre-amber flame gradient background) with a cinematic reveal animation. Add a sticky horizontal year scrubber at the top to jump between specific years.</span>
+                </p>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-list-checks text-2xl text-amber-600 dark:text-amber-500 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-amber-700 dark:text-amber-500">Siapkan:</span> daftar usaha/proyek kamu per tahun + hasilnya (untung/rugi/pelajaran). Tandai mana yang paling besar (jadi kartu featured).</span>
+                    <span class="lang-en"><span class="font-bold text-amber-700 dark:text-amber-500">Prepare:</span> a list of your businesses/projects chronologically + their outcomes (profit/loss/lesson). Mark which one is the biggest milestone (to be the featured card).</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Border gradien berputar</span><span class="lang-en">Rotating gradient border</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Spotlight kursor</span><span class="lang-en">Cursor spotlight</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Tilt 3D hover</span><span class="lang-en">3D hover tilt</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Kartu featured</span><span class="lang-en">Featured card</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Scrubber tahun sticky</span><span class="lang-en">Sticky year scrubber</span></span>
+            </div>
+        </section>
+
+        <!-- SECTION 08: Contact -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">08</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <span class="lang-id">Contact Section — CTA Sosial Media</span>
+                    <span class="lang-en">Contact Section — Social Media CTA</span>
+                </h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Ajakan terakhir: kartu besar dengan judul, lalu <span class="font-bold text-slate-900 dark:text-white">kartu-kartu link sosmed</span> (Instagram, WhatsApp, Email) dengan ikon berwarna brand-nya masing-masing.</span>
+                <span class="lang-en">The final call-to-action: a large card with a heading, followed by <span class="font-bold text-slate-900 dark:text-white">social media link cards</span> (Instagram, WhatsApp, Email) featuring icons in their respective brand colors.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 8 - CONTACT</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat section contact: satu kartu besar dengan glow gradien di latarnya, judul ajakan besar ("Let's connect / Follow my journey"), dan sub-judul singkat. Di bawahnya, 3 kartu link bersebelahan untuk Instagram, WhatsApp, dan Email — tiap kartu punya ikon kotak dengan warna gradien khas brand-nya (IG warna-warni, WA hijau, email merah), label kecil, judul, dan panah yang bergerak saat hover. Buat satu kartu sebagai primary (gradien penuh).</span>
+                    <span class="lang-en">Create a contact section: one large container card featuring a subtle gradient glow in the background, a large call-to-action title ("Let's connect / Follow my journey"), and a brief sub-title. Below it, align 3 link cards horizontally for Instagram, WhatsApp, and Email — each card should feature a square icon with its signature brand gradient color (IG colorful, WA green, Email red), a small descriptive label, a bold title, and an arrow icon that translates slightly on hover. Designate one card as the primary option by giving it a full gradient background.</span>
+                </p>
+            </div>
+
+            <div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 flex gap-4 mt-2">
+                <i class="ph ph-at text-2xl text-amber-600 dark:text-amber-500 shrink-0"></i>
+                <p class="text-sm">
+                    <span class="lang-id"><span class="font-bold text-amber-700 dark:text-amber-500">Siapkan:</span> username/link Instagram, nomor WhatsApp, dan alamat email kamu.</span>
+                    <span class="lang-en"><span class="font-bold text-amber-700 dark:text-amber-500">Prepare:</span> your Instagram username/link, WhatsApp number, and email address.</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Kartu CTA + glow</span><span class="lang-en">CTA Card + glow</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300"><span class="lang-id">Ikon brand sosmed</span><span class="lang-en">Social brand icons</span></span>
+                <span class="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Hover arrow</span>
+            </div>
+        </section>
+
+        <!-- SECTION 09: Footer -->
+        <section class="flex flex-col gap-6">
+            <div class="flex items-baseline gap-4">
+                <span class="font-mono text-brand-500 dark:text-brand-400 font-bold text-xl">09</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">Footer</h2>
+            </div>
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Penutup sederhana, rapi.</span>
+                <span class="lang-en">Simple, neat closing section.</span>
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-accent-500"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">PROMPT 9 - FOOTER</span>
+                    </div>
+                    <button onclick="copyPrompt(this)" class="px-4 py-1.5 rounded-full text-xs font-medium border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Copy</button>
+                </div>
+                <p class="font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-300 selection:bg-brand-500/30">
+                    <span class="lang-id">Buat footer minimalis: garis pemisah tipis di atas, kiri nama + tahun copyright, kanan teks kecil bergaya monospace (mis. "Built with care" atau lokasi). Warna teks redup, ukuran kecil.</span>
+                    <span class="lang-en">Create a minimalist footer: add a thin separator line at the top, left align the name + copyright year, and right align a small monospace text snippet (e.g., "Built with care" or location coordinates). Use a dimmed, low-contrast text color and small font size.</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Deployment Info -->
+        <section class="mt-8 border-t-2 border-dashed border-slate-200 dark:border-slate-700 pt-16 flex flex-col gap-8">
+            <div class="flex items-center gap-3">
+                <i class="ph ph-rocket-launch text-3xl text-brand-500"></i>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+                    <span class="lang-id">Online-kan Website (Deploy)</span>
+                    <span class="lang-en">Publish Your Website (Deploy)</span>
+                </h2>
+            </div>
+            
+            <div class="flex items-center gap-3 text-xs font-mono font-semibold tracking-widest text-emerald-600 dark:text-emerald-400 uppercase">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="lang-id">Langkah Manual • Bukan Prompt ke AI</span>
+                <span class="lang-en">Manual Step • Not an AI Prompt</span>
+            </div>
+
+            <p class="text-lg leading-relaxed">
+                <span class="lang-id">Sampai sini, website kamu masih berupa file di komputer — cuma kamu yang bisa lihat. Supaya bisa diakses <span class="font-bold text-slate-900 dark:text-white">siapa aja lewat link/domain</span>, file-nya harus di-upload ke server. Beda dari section lain, ini <span class="underline decoration-wavy decoration-brand-500 underline-offset-4">kamu kerjain sendiri</span>, bukan ditempel ke AI.</span>
+                <span class="lang-en">At this point, your website is still just a file on your computer — only you can view it. To make it accessible <span class="font-bold text-slate-900 dark:text-white">to anyone via a link/domain</span>, the file needs to be uploaded to a server. Unlike the previous sections, <span class="underline decoration-wavy decoration-brand-500 underline-offset-4">you must do this part yourself manually</span>, not by pasting text into the AI.</span>
+            </p>
+
+            <div class="bg-slate-100 dark:bg-slate-800/50 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 mt-4">
+                <h3 class="font-bold text-slate-500 dark:text-slate-400 text-sm tracking-wider uppercase mb-6">
+                    <span class="lang-id">Siapkan Dulu (Berlaku Untuk Semua Cara)</span>
+                    <span class="lang-en">Preparation (Applies to all methods)</span>
+                </h3>
+                <ul class="space-y-4 text-slate-700 dark:text-slate-300">
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-2.5 shrink-0"></div>
+                        <p>
+                            <span class="lang-id">Minta AI gabungkan semua section jadi <span class="font-bold">satu file</span>. Prompt: <i class="italic">"Gabungkan semua section tadi jadi satu file HTML lengkap bernama index.html, semua CSS & JS inline di dalamnya."</i></span>
+                            <span class="lang-en">Ask the AI to combine all sections into <span class="font-bold">a single file</span>. Prompt: <i class="italic">"Combine all the previous sections into one complete HTML file named index.html, keeping all CSS & JS inline within it."</i></span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-2.5 shrink-0"></div>
+                        <p>
+                            <span class="lang-id">Simpan file itu di satu folder, pastikan namanya persis <code class="bg-slate-200 dark:bg-slate-700 text-brand-600 dark:text-brand-400 px-2 py-0.5 rounded font-mono text-sm">index.html</code> (huruf kecil semua).</span>
+                            <span class="lang-en">Save that generated code inside a folder on your PC. Ensure the filename is exactly <code class="bg-slate-200 dark:bg-slate-700 text-brand-600 dark:text-brand-400 px-2 py-0.5 rounded font-mono text-sm">index.html</code> (all lowercase).</span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-2.5 shrink-0"></div>
+                        <p>
+                            <span class="lang-id">Kalau pakai foto, taruh file fotonya di <span class="font-bold">folder yang sama</span>.</span>
+                            <span class="lang-en">If you used any custom photos, place those image files inside the <span class="font-bold">exact same folder</span>.</span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-emerald-50 dark:bg-emerald-900/10 rounded-3xl p-6 sm:p-8 border border-emerald-200 dark:border-emerald-800/30">
+                <div class="flex flex-wrap items-center gap-4 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold font-mono">A</div>
+                    <h3 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Cloudflare Pages</h3>
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold tracking-wide">RECOMMENDED • <span class="lang-id">GRATIS</span><span class="lang-en">FREE</span></span>
+                </div>
+                
+                <p class="mb-8 text-slate-700 dark:text-slate-300">
+                    <span class="lang-id">Paling gampang buat pemula. <span class="font-bold">Gratis selamanya</span>, cepat (server global), otomatis dapat HTTPS (gembok hijau) & link <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">namamu.pages.dev</code>.</span>
+                    <span class="lang-en">The easiest method for beginners. <span class="font-bold">Free forever</span>, blazing fast (global CDN servers), automatically provisions HTTPS (green padlock), and provides a <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">yourname.pages.dev</code> link.</span>
+                </p>
+                
+                <ol class="space-y-6 text-slate-700 dark:text-slate-300">
+                    <li class="flex gap-4">
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm shrink-0">1</div>
+                        <p>
+                            <span class="lang-id">Buka <a href="https://dash.cloudflare.com" target="_blank" class="text-brand-600 dark:text-brand-400 hover:underline">dash.cloudflare.com</a> lalu daftar / login — gratis, cukup pakai email.</span>
+                            <span class="lang-en">Go to <a href="https://dash.cloudflare.com" target="_blank" class="text-brand-600 dark:text-brand-400 hover:underline">dash.cloudflare.com</a> and sign up / log in — it's free, just requires an email.</span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm shrink-0">2</div>
+                        <p>
+                            <span class="lang-id">Di menu kiri pilih <span class="font-bold">Workers & Pages</span> → klik <span class="font-bold">Create</span> → buka tab <span class="font-bold">Pages</span> → <span class="font-bold">Upload assets</span>.</span>
+                            <span class="lang-en">On the left sidebar, navigate to <span class="font-bold">Workers & Pages</span> → click <span class="font-bold">Create</span> → switch to the <span class="font-bold">Pages</span> tab → select <span class="font-bold">Upload assets</span>.</span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm shrink-0">3</div>
+                        <p>
+                            <span class="lang-id">Beri nama project (mis. <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">nurzal</code>). Nama ini jadi link kamu: <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">nurzal.pages.dev</code>.</span>
+                            <span class="lang-en">Enter a project name (e.g., <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">nurzal</code>). This name becomes your subdomain link: <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">nurzal.pages.dev</code>.</span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm shrink-0">4</div>
+                        <p>
+                            <span class="lang-id"><span class="font-bold">Drag & drop</span> folder berisi <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">index.html</code> (+ foto) ke kotak upload → klik <span class="font-bold">Deploy site</span>.</span>
+                            <span class="lang-en"><span class="font-bold">Drag & drop</span> the entire folder containing <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">index.html</code> (+ any photos) into the upload box → click <span class="font-bold">Deploy site</span>.</span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm shrink-0">5</div>
+                        <p>
+                            <span class="lang-id">Tunggu ~30 detik → muncul link <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">https://nurzal.pages.dev</code>. Selesai — website udah online!</span>
+                            <span class="lang-en">Wait approximately 30 seconds → a success link will appear (e.g., <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">https://nurzal.pages.dev</code>). Done — your website is live!</span>
+                        </p>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm shrink-0">6</div>
+                        <p>
+                            <span class="lang-id">Mau pakai domain sendiri (<code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">nurzalkifli.com</code>)? Masuk ke project → tab <span class="font-bold">Custom domains</span> → <span class="font-bold">Set up a domain</span> → ketik domainmu → ikuti instruksi arahkan DNS-nya.</span>
+                            <span class="lang-en">Want to use a custom domain (like <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-mono text-sm">nurzalkifli.com</code>)? Open the project settings → <span class="font-bold">Custom domains</span> tab → click <span class="font-bold">Set up a domain</span> → enter your purchased domain → follow the on-screen DNS configuration instructions.</span>
+                        </p>
+                    </li>
+                </ol>
+
+                <div class="mt-8 pt-6 border-t border-emerald-200 dark:border-emerald-800/50">
+                    <p class="text-sm text-slate-600 dark:text-slate-400">
+                        <span class="lang-id"><span class="font-bold text-emerald-700 dark:text-emerald-500">Update nanti:</span> mau ganti isi website? Ulang langkah upload aja — drag file <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1 py-0.5 rounded font-mono text-xs">index.html</code> yang baru, otomatis ke-replace.</span>
+                        <span class="lang-en"><span class="font-bold text-emerald-700 dark:text-emerald-500">Updating later:</span> need to change the website content? Simply repeat the upload process — drag and drop the newly modified <code class="bg-emerald-100/50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-1 py-0.5 rounded font-mono text-xs">index.html</code> folder, and it will automatically replace the old version.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 10: Contoh Hasil Jadi -->
+        <section class="w-full">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-soft dark:shadow-soft-dark border border-slate-200 dark:border-slate-700 flex flex-col gap-4 items-start group hover:-translate-y-1 transition-transform duration-300">
+                <span class="font-mono text-sm font-bold text-[#6c3baa] dark:text-[#c54b8c] tracking-widest uppercase">
+                    <span class="lang-id">CONTOH HASIL JADI</span>
+                    <span class="lang-en">LIVE DEMO</span>
+                </span>
+                <p class="text-lg text-slate-700 dark:text-slate-300 mb-2">
+                    <span class="lang-id">Penasaran hasil akhirnya? <span class="font-bold text-slate-900 dark:text-white">Klik tombol ini</span> untuk lihat website aslinya yang sudah online.</span>
+                    <span class="lang-en">Curious about the final output? <span class="font-bold text-slate-900 dark:text-white">Click this button</span> to view the fully deployed, live version of the generated website.</span>
+                </p>
+                <a href="https://nurzalkifli.site/" target="_blank" class="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#6c3baa] to-[#c54b8c] text-white font-bold hover:scale-105 shadow-[0_0_20px_rgba(219,72,188,0.3)] hover:shadow-[0_0_30px_rgba(219,72,188,0.4)] transition-all duration-300">
+                    <span class="lang-id">Kunjungi website</span>
+                    <span class="lang-en">Visit website</span>
+                    <i class="ph ph-arrow-up-right font-bold text-lg"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer Footer -->
+        <footer class="text-center py-8 text-slate-500 dark:text-slate-400 text-sm border-t border-slate-200 dark:border-slate-800 mt-10">
+            <p>
+                <span class="lang-id">Dibuat untuk mempermudah. Have fun building!</span>
+                <span class="lang-en">Built to make it easier. Have fun building!</span>
+            </p>
+        </footer>
+
+    </main>
+
+</body>
+</html>

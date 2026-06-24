@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects - Nurzal Kifli Portfolio</title>
+  <meta name="description" content="Berbagai hasil proyek nyata bersama klien - website company profile, e-commerce, restoran, properti, dan lebih banyak lagi." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+
+    /* ── FILTER TABS ── */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 52px;
+    }
+
+    /* ── PROJECT GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      transition: var(--t);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      border-radius: inherit;
+      z-index: 1;
+    }
+    .project-card:hover {
+      border-color: var(--glass-bh);
+      transform: translateY(-10px);
+      box-shadow: 0 24px 60px rgba(139,92,246,0.2);
+    }
+
+    /* Featured card - spans 2 columns */
+    .project-card.featured {
+      grid-column: span 2;
+    }
+
+    /* ── CARD THUMBNAIL ── */
+    .card-thumb {
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .project-card:not(.featured) .card-thumb {
+      height: 220px;
+    }
+    .project-card.featured .card-thumb {
+      height: 300px;
+    }
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease);
+      filter: brightness(0.9) saturate(0.95);
+    }
+    .project-card:hover .card-thumb img {
+      transform: scale(1.06);
+    }
+    .card-thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(5,5,8,0.75) 100%);
+    }
+
+    /* Status badge on image */
+    .card-status {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+    .card-status.live {
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.35);
+      color: #34d399;
+    }
+    .card-status.live::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: pulse-green 2s infinite;
+    }
+    .card-status.completed {
+      background: rgba(139,92,246,0.15);
+      border: 1px solid rgba(139,92,246,0.35);
+      color: var(--purple-light);
+    }
+    .card-status.inprogress {
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: #fbbf24;
+    }
+    @keyframes pulse-green {
+      0%,100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.4); }
+      50%      { box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+    }
+
+    /* Category chip on image */
+    .card-category-chip {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 2;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: rgba(5,5,8,0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-b);
+      color: var(--w70);
+    }
+
+    /* Preview button on hover */
+    .card-preview-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: rgba(139,92,246,0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--w100);
+      font-size: 0.75rem;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: var(--t);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .project-card:hover .card-preview-btn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── CARD BODY ── */
+    .card-body {
+      padding: 26px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-client-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .client-avatar {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: var(--grad-p);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; font-weight: 800;
+      color: var(--w100);
+      font-family: var(--fd);
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+    .client-name {
+      font-size: 0.78rem;
+      color: var(--w50);
+      font-weight: 500;
+    }
+    .client-date {
+      margin-left: auto;
+      font-size: 0.68rem;
+      color: var(--w50);
+      white-space: nowrap;
+    }
+
+    .card-title {
+      font-family: var(--fd);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+      transition: var(--t);
+    }
+    .project-card:hover .card-title {
+      color: var(--purple-light);
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--w50);
+      line-height: 1.75;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+
+    /* Tech stack tags */
+    .card-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .stack-tag {
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.2);
+      color: var(--purple-light);
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Card footer row */
+    .card-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--glass-b);
+      margin-top: auto;
+    }
+    .card-metrics {
+      display: flex;
+      gap: 16px;
+    }
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .metric-val {
+      font-family: var(--fd);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--purple-light);
+    }
+    .metric-lbl {
+      font-size: 0.65rem;
+      color: var(--w50);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--purple-light);
+      padding: 7px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(139,92,246,0.3);
+      background: rgba(139,92,246,0.08);
+      transition: var(--t);
+      text-decoration: none;
+    }
+    .card-link:hover {
+      background: rgba(139,92,246,0.18);
+      border-color: rgba(139,92,246,0.5);
+      transform: translateY(-1px);
+    }
+
+    /* ── FEATURED CARD extra styles ── */
+    .project-card.featured .card-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .featured-left {}
+    .featured-right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .featured-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .featured-stat-item {
+      padding: 14px 16px;
+      background: var(--glass-w);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r);
+      text-align: center;
+    }
+    .fs-val {
+      font-family: var(--fd);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--purple-light);
+      display: block;
+    }
+    .fs-lbl {
+      font-size: 0.65rem;
+      color: var(--w50);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ── ADD PROJECT CTA ── */
+    .add-project-card {
+      background: transparent;
+      border: 2px dashed rgba(139,92,246,0.25);
+      border-radius: var(--r-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 48px 28px;
+      text-align: center;
+      transition: var(--t);
+      cursor: pointer;
+      min-height: 300px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .add-project-card:hover {
+      border-color: rgba(139,92,246,0.5);
+      background: rgba(139,92,246,0.04);
+      transform: translateY(-4px);
+    }
+    .add-project-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      transition: var(--t);
+    }
+    .add-project-card:hover .add-project-icon {
+      background: rgba(139,92,246,0.2);
+      transform: scale(1.1);
+    }
+    .add-project-card h4 { font-size: 1rem; font-weight: 700; }
+    .add-project-card p { font-size: 0.82rem; color: var(--w50); line-height: 1.65; max-width: 180px; }
+
+    /* ── STATS BANNER ── */
+    .stats-banner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--glass-b);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-bottom: 80px;
+    }
+
+    /* ── TESTIMONIAL ROW ── */
+    .testimonial-mini {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-xl);
+      padding: 36px;
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .testimonial-mini-quote {
+      font-size: 3rem;
+      color: rgba(139,92,246,0.3);
+      font-family: var(--fd);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .testimonial-mini-text {
+      flex: 1;
+      font-size: 1.05rem;
+      color: var(--w70);
+      font-style: italic;
+      line-height: 1.8;
+    }
+    .testimonial-mini-author {
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .tma-name { font-weight: 700; font-size: 0.9rem; }
+    .tma-role { font-size: 0.78rem; color: var(--purple-light); margin-top: 4px; }
+
+    /* ── PROCESS TIMELINE ── */
+    .process-timeline {
+      display: flex;
+      gap: 0;
+      position: relative;
+    }
+    .process-timeline::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 28px; right: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    }
+    .pt-step {
+      flex: 1;
+      text-align: center;
+      padding: 0 12px;
+      position: relative;
+    }
+    .pt-icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin: 0 auto 14px;
+      position: relative;
+      z-index: 1;
+      transition: var(--t);
+      backdrop-filter: blur(12px);
+    }
+    .pt-step:hover .pt-icon-wrap {
+      background: rgba(139,92,246,0.15);
+      border-color: rgba(139,92,246,0.4);
+      box-shadow: var(--glow-s);
+    }
+    .pt-label { font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
+    .pt-desc { font-size: 0.75rem; color: var(--w50); line-height: 1.6; }
+
+    /* ── CTA BOX ── */
+    .cta-project-box {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-2x);
+      padding: 72px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-project-box::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    }
+    .cta-project-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-project-content { position: relative; z-index: 1; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+      .project-card.featured { grid-column: span 2; }
+      .project-card.featured .card-body { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card.featured { grid-column: span 1; }
+      .stats-banner { grid-template-columns: repeat(2,1fr); }
+      .process-timeline { flex-direction: column; gap: 24px; }
+      .process-timeline::before { display: none; }
+      .testimonial-mini { flex-direction: column; text-align: center; }
+      .testimonial-mini-author { text-align: center; }
+      .cta-project-box { padding: 48px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Nurzal <span>Kifli</span></a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Buka Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <button class="nav-close-btn" id="navClose" aria-label="Tutup Menu">&#x2715;</button>
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="photography.html" data-i18n="nav.photography">Fotografi</a></li>
+        <li><a href="design.html" data-i18n="nav.design">Desain Grafis</a></li>
+        <li><a href="contractor.html" data-i18n="nav.contractor">Kontraktor</a></li>
+        <li><a href="projects.html" class="active" data-i18n="nav.projects">Projects</a></li>
+        <li><a href="about.html" data-i18n="nav.about">Tentang</a></li>
+        <li><a href="contact.html" class="nav-cta" data-i18n="nav.contact">Hubungi Saya</a></li>
+      </ul>
+      <div class="nav-controls">
+        <button class="control-btn lang-btn" id="langBtn" title="Switch to English">EN</button>
+        <button class="control-btn theme-btn" id="themeBtn" title="Switch to Light Mode">&#x2600;&#xFE0F;</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── PAGE HERO ── -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <div class="page-hero-tag">&#x1F4BB; Hasil Karya Nyata</div>
+        <h1>Projects <span class="text-grad">Klien</span></h1>
+        <p>Kumpulan website dan proyek digital yang telah berhasil diwujudkan bersama klien &mdash; dari ideasi hingga live production.</p>
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-purple">&#x1F91D; Diskusi Proyek Anda</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="btn btn-glass">&#x1F4F1; WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BANNER ── -->
+  <section style="padding: 0 0 0; position:relative; z-index:1;">
+    <div class="container" style="padding-bottom:80px;">
+      <div class="stats-banner">
+        <div class="stat-card">
+          <div class="stat-number" data-target="18" data-suffix="+">0+</div>
+          <div class="stat-label">Website Dibuat</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-target="15" data-suffix="+">0+</div>
+          <div class="stat-label">Klien Puas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-target="100" data-suffix="%">0%</div>
+          <div class="stat-label">On-Time Delivery</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-target="4" data-suffix="+">0+</div>
+          <div class="stat-label">Tahun Pengalaman</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS SECTION ── -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs reveal">
+        <button class="filter-btn active" data-filter="all">&#x1F4CB; Semua</button>
+        <button class="filter-btn" data-filter="website">&#x1F310; Website</button>
+        <button class="filter-btn" data-filter="ecommerce">&#x1F6D2; E-Commerce</button>
+        <button class="filter-btn" data-filter="company">&#x1F3E2; Company Profile</button>
+        <button class="filter-btn" data-filter="landing">&#x1F4C4; Landing Page</button>
+        <button class="filter-btn" data-filter="other">&#x2728; Lainnya</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projectsGrid">
+
+        <!-- FEATURED: Project 1 -->
+        <article class="project-card featured reveal" data-category="website">
+          <div class="card-thumb">
+            <img src="img/project_mockup_1.png" alt="Company Profile - PT Bangun Nusantara" loading="lazy" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status live">&#x25CF; Live</span>
+            <span class="card-category-chip">Website</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="featured-left">
+              <div class="card-client-row">
+                <div class="client-avatar">BN</div>
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem;">PT Bangun Nusantara</div>
+                  <div class="client-name">Makassar, Indonesia</div>
+                </div>
+                <div class="client-date">Mar 2024</div>
+              </div>
+              <h2 class="card-title">Company Profile Website &amp; Brand Presence</h2>
+              <p class="card-desc">Website company profile modern untuk perusahaan konstruksi terkemuka. Menampilkan portofolio proyek, tim profesional, dan sistem inquiry online yang meningkatkan lead generation hingga 3x lipat.</p>
+              <div class="card-stack">
+                <span class="stack-tag">HTML5</span>
+                <span class="stack-tag">CSS3</span>
+                <span class="stack-tag">JavaScript</span>
+                <span class="stack-tag">PHP</span>
+                <span class="stack-tag">MySQL</span>
+              </div>
+              <div class="card-footer-row">
+                <div class="card-metrics">
+                  <div class="metric"><span class="metric-val">3x</span><span class="metric-lbl">Lead Increase</span></div>
+                  <div class="metric"><span class="metric-val">2 wk</span><span class="metric-lbl">Pengerjaan</span></div>
+                </div>
+                <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+              </div>
+            </div>
+            <div class="featured-right">
+              <div class="featured-stats">
+                <div class="featured-stat-item">
+                  <span class="fs-val">98</span>
+                  <span class="fs-lbl">PageSpeed Score</span>
+                </div>
+                <div class="featured-stat-item">
+                  <span class="fs-val">100%</span>
+                  <span class="fs-lbl">Mobile Friendly</span>
+                </div>
+                <div class="featured-stat-item">
+                  <span class="fs-val">SEO</span>
+                  <span class="fs-lbl">Optimized</span>
+                </div>
+                <div class="featured-stat-item">
+                  <span class="fs-val">1 yr</span>
+                  <span class="fs-lbl">Support</span>
+                </div>
+              </div>
+              <div style="padding:18px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15);border-radius:var(--r);font-size:0.82rem;color:var(--w50);line-height:1.75;">
+                <span style="color:var(--purple-light);font-weight:700;">Klien bilang:</span><br>
+                "Website baru kami memberikan kesan profesional yang luar biasa. Jumlah klien yang menghubungi meningkat drastis sejak website live."
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2: E-Commerce -->
+        <article class="project-card reveal delay-1" data-category="ecommerce">
+          <div class="card-thumb">
+            <img src="img/project_mockup_2.png" alt="E-Commerce Toko Fashion" loading="lazy" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status live">&#x25CF; Live</span>
+            <span class="card-category-chip">E-Commerce</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">TF</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">Toko Fashion Online</div>
+                <div class="client-name">Jakarta, Indonesia</div>
+              </div>
+              <div class="client-date">Jan 2024</div>
+            </div>
+            <h3 class="card-title">Online Fashion Store dengan Sistem Pembayaran</h3>
+            <p class="card-desc">Toko online fashion dengan fitur katalog produk, keranjang belanja, integrasi payment gateway (Midtrans), dan dashboard admin lengkap.</p>
+            <div class="card-stack">
+              <span class="stack-tag">Next.js</span>
+              <span class="stack-tag">Tailwind</span>
+              <span class="stack-tag">Midtrans</span>
+              <span class="stack-tag">Firebase</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">150+</span><span class="metric-lbl">Produk</span></div>
+                <div class="metric"><span class="metric-val">3 wk</span><span class="metric-lbl">Pengerjaan</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3: Restaurant -->
+        <article class="project-card reveal delay-2" data-category="landing">
+          <div class="card-thumb">
+            <img src="img/project_mockup_3.png" alt="Website Restoran" loading="lazy" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status live">&#x25CF; Live</span>
+            <span class="card-category-chip">Landing Page</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">RN</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">Resto Nusantara</div>
+                <div class="client-name">Makassar, Indonesia</div>
+              </div>
+              <div class="client-date">Feb 2024</div>
+            </div>
+            <h3 class="card-title">Website Restoran dengan Sistem Reservasi Online</h3>
+            <p class="card-desc">Landing page restoran premium dengan menu interaktif, sistem reservasi meja online, galeri foto, dan integrasi Google Maps.</p>
+            <div class="card-stack">
+              <span class="stack-tag">HTML5</span>
+              <span class="stack-tag">CSS3</span>
+              <span class="stack-tag">JavaScript</span>
+              <span class="stack-tag">Google API</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">+60%</span><span class="metric-lbl">Reservasi</span></div>
+                <div class="metric"><span class="metric-val">1 wk</span><span class="metric-lbl">Pengerjaan</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 4: Real Estate -->
+        <article class="project-card reveal delay-1" data-category="website">
+          <div class="card-thumb">
+            <img src="img/project_mockup_4.png" alt="Website Properti" loading="lazy" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status completed">&#x2713; Selesai</span>
+            <span class="card-category-chip">Website</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">PP</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">Prima Properti</div>
+                <div class="client-name">Gowa, Indonesia</div>
+              </div>
+              <div class="client-date">Nov 2023</div>
+            </div>
+            <h3 class="card-title">Platform Listing Properti &amp; Real Estate</h3>
+            <p class="card-desc">Website properti dengan fitur listing lengkap, filter pencarian canggih, virtual tour, dan halaman detail unit dengan peta interaktif.</p>
+            <div class="card-stack">
+              <span class="stack-tag">React</span>
+              <span class="stack-tag">Node.js</span>
+              <span class="stack-tag">MongoDB</span>
+              <span class="stack-tag">Leaflet.js</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">80+</span><span class="metric-lbl">Listing</span></div>
+                <div class="metric"><span class="metric-val">4 wk</span><span class="metric-lbl">Pengerjaan</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 5: Corporate -->
+        <article class="project-card reveal delay-2" data-category="company">
+          <div class="card-thumb">
+            <img src="img/project_mockup_5.png" alt="Corporate Profile" loading="lazy" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status inprogress">&#x23F3; In Progress</span>
+            <span class="card-category-chip">Company Profile</span>
+            <a href="#" class="card-preview-btn">&#x1F441;&#xFE0F; Preview</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">TS</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">CV Teknik Sejahtera</div>
+                <div class="client-name">Makassar, Indonesia</div>
+              </div>
+              <div class="client-date">Jun 2024</div>
+            </div>
+            <h3 class="card-title">Company Profile Modern dengan CMS Admin</h3>
+            <p class="card-desc">Website profil perusahaan teknik dengan panel admin untuk update konten mandiri, portofolio proyek dinamis, dan blog artikel.</p>
+            <div class="card-stack">
+              <span class="stack-tag">WordPress</span>
+              <span class="stack-tag">Elementor</span>
+              <span class="stack-tag">PHP</span>
+              <span class="stack-tag">MySQL</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">CMS</span><span class="metric-lbl">Included</span></div>
+                <div class="metric"><span class="metric-val">2 wk</span><span class="metric-lbl">Timeline</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Tanya Status &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 6: Landing Page -->
+        <article class="project-card reveal delay-3" data-category="landing">
+          <div class="card-thumb">
+            <img src="img/hero_photography.png" alt="Landing Page Studio Foto" loading="lazy" style="filter:brightness(0.7) saturate(0.8);" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status live">&#x25CF; Live</span>
+            <span class="card-category-chip">Landing Page</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">SF</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">Studio Foto Abadi</div>
+                <div class="client-name">Makassar, Indonesia</div>
+              </div>
+              <div class="client-date">Dec 2023</div>
+            </div>
+            <h3 class="card-title">Landing Page Studio Fotografi dengan Booking Online</h3>
+            <p class="card-desc">One-page website untuk studio foto dengan galeri portfolio, paket layanan, dan sistem booking sesi foto berbasis WhatsApp API.</p>
+            <div class="card-stack">
+              <span class="stack-tag">HTML5</span>
+              <span class="stack-tag">CSS3</span>
+              <span class="stack-tag">JavaScript</span>
+              <span class="stack-tag">WA API</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">+85%</span><span class="metric-lbl">Booking</span></div>
+                <div class="metric"><span class="metric-val">5 day</span><span class="metric-lbl">Pengerjaan</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 7: Design Agency -->
+        <article class="project-card reveal delay-1" data-category="company">
+          <div class="card-thumb">
+            <img src="img/hero_design.png" alt="Website Desain Agensi" loading="lazy" style="filter:brightness(0.75);" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status live">&#x25CF; Live</span>
+            <span class="card-category-chip">Company Profile</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">KD</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">Kreatif Digital</div>
+                <div class="client-name">Gowa, Indonesia</div>
+              </div>
+              <div class="client-date">Oct 2023</div>
+            </div>
+            <h3 class="card-title">Portfolio Website Agensi Desain &amp; Kreatif</h3>
+            <p class="card-desc">Website portofolio untuk agensi desain dengan animasi scroll yang memukau, case study interaktif, dan formulir project inquiry.</p>
+            <div class="card-stack">
+              <span class="stack-tag">HTML5</span>
+              <span class="stack-tag">GSAP</span>
+              <span class="stack-tag">JavaScript</span>
+              <span class="stack-tag">Vite</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">95</span><span class="metric-lbl">Lighthouse</span></div>
+                <div class="metric"><span class="metric-val">10 day</span><span class="metric-lbl">Pengerjaan</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 8: Contractor Website -->
+        <article class="project-card reveal delay-2" data-category="website">
+          <div class="card-thumb">
+            <img src="img/construction_project.png" alt="Website Kontraktor" loading="lazy" style="filter:brightness(0.75) saturate(0.85);" />
+            <div class="card-thumb-overlay"></div>
+            <span class="card-status completed">&#x2713; Selesai</span>
+            <span class="card-category-chip">Website</span>
+            <a href="#" class="card-preview-btn" target="_blank" rel="noopener">&#x1F517; Buka Website</a>
+          </div>
+          <div class="card-body">
+            <div class="card-client-row">
+              <div class="client-avatar">MJ</div>
+              <div>
+                <div style="font-weight:600;font-size:0.85rem;">Maju Jaya Contractor</div>
+                <div class="client-name">Makassar, Indonesia</div>
+              </div>
+              <div class="client-date">Aug 2023</div>
+            </div>
+            <h3 class="card-title">Website Jasa Kontraktor dengan Fitur Estimasi Biaya</h3>
+            <p class="card-desc">Website untuk perusahaan kontraktor dilengkapi kalkulator estimasi biaya renovasi, galeri proyek, dan sistem penawaran online.</p>
+            <div class="card-stack">
+              <span class="stack-tag">HTML5</span>
+              <span class="stack-tag">CSS3</span>
+              <span class="stack-tag">JavaScript</span>
+              <span class="stack-tag">PHP</span>
+            </div>
+            <div class="card-footer-row">
+              <div class="card-metrics">
+                <div class="metric"><span class="metric-val">+2x</span><span class="metric-lbl">Penawaran</span></div>
+                <div class="metric"><span class="metric-val">2 wk</span><span class="metric-lbl">Pengerjaan</span></div>
+              </div>
+              <a href="contact.html" class="card-link">Proyek Serupa &#x2192;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Add New Project CTA -->
+        <a href="contact.html" class="add-project-card reveal delay-3" aria-label="Tambah project baru">
+          <div class="add-project-icon">&#x2795;</div>
+          <h4>Proyek Anda Berikutnya?</h4>
+          <p>Hubungi saya untuk mulai membangun website impian Anda</p>
+          <span class="btn btn-outline-purple" style="margin-top:4px;font-size:0.78rem;padding:8px 18px;">Mulai Diskusi &#x2192;</span>
+        </a>
+
+      </div><!-- /projects-grid -->
+    </div>
+  </section>
+
+  <!-- ── PROSES KERJA ── -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="section-header centered reveal">
+        <div class="section-label">&#x26A1; Alur Kerja</div>
+        <h2 class="section-title">Dari Ide Hingga <span class="text-grad">Website Live</span></h2>
+        <div class="divider"></div>
+        <p class="section-subtitle">Proses terstruktur dan transparan untuk memastikan hasil terbaik di setiap proyek.</p>
+      </div>
+      <div class="process-timeline reveal">
+        <div class="pt-step">
+          <div class="pt-icon-wrap">&#x1F4AC;</div>
+          <div class="pt-label">Konsultasi</div>
+          <p class="pt-desc">Diskusi kebutuhan, target, dan anggaran proyek Anda</p>
+        </div>
+        <div class="pt-step">
+          <div class="pt-icon-wrap">&#x1F4DD;</div>
+          <div class="pt-label">Perencanaan</div>
+          <p class="pt-desc">Desain wireframe, struktur halaman, dan tech stack</p>
+        </div>
+        <div class="pt-step">
+          <div class="pt-icon-wrap">&#x1F3A8;</div>
+          <div class="pt-label">Desain UI</div>
+          <p class="pt-desc">Mockup visual yang sesuai dengan brand identity Anda</p>
+        </div>
+        <div class="pt-step">
+          <div class="pt-icon-wrap">&#x2699;&#xFE0F;</div>
+          <div class="pt-label">Development</div>
+          <p class="pt-desc">Coding, testing, dan optimasi performa website</p>
+        </div>
+        <div class="pt-step">
+          <div class="pt-icon-wrap">&#x1F680;</div>
+          <div class="pt-label">Launch &amp; Support</div>
+          <p class="pt-desc">Deploy, domain setup, dan after-sales support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONI KLIEN ── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header centered reveal" style="margin-bottom:40px;">
+        <div class="section-label">&#x1F4AC; Kata Klien</div>
+        <h2 class="section-title">Pengalaman <span class="text-grad">Berkolaborasi</span></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="grid-2 reveal" style="gap:20px;">
+        <div class="testimonial-mini">
+          <div class="testimonial-mini-quote">"</div>
+          <p class="testimonial-mini-text">Website yang dibuat Nurzal benar-benar profesional dan responsif. Klien kami sering memuji tampilannya. Proses pengerjaan cepat dan komunikasi lancar!</p>
+          <div class="testimonial-mini-author">
+            <div class="tma-name">Bapak Hendra S.</div>
+            <div class="tma-role">Direktur PT Bangun Nusantara</div>
+          </div>
+        </div>
+        <div class="testimonial-mini">
+          <div class="testimonial-mini-quote">"</div>
+          <p class="testimonial-mini-text">Penjualan online kami meningkat drastis setelah website e-commerce selesai. Fiturnya lengkap, tampilan menarik, dan mudah dikelola sendiri.</p>
+          <div class="testimonial-mini-author">
+            <div class="tma-name">Ibu Sari W.</div>
+            <div class="tma-role">Owner Toko Fashion Online</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="section" style="background:rgba(139,92,246,0.03);">
+    <div class="container">
+      <div class="cta-project-box reveal">
+        <div class="cta-project-content">
+          <div class="section-label" style="justify-content:center;margin-bottom:20px;">&#x1F4BB; Mulai Proyek Web Anda</div>
+          <h2 class="section-title" style="margin-bottom:14px;">Punya Ide? Mari <span class="text-grad">Wujudkan!</span></h2>
+          <p style="color:var(--w50);max-width:500px;margin:0 auto 32px;line-height:1.85;">Saya siap membantu membangun website profesional yang sesuai kebutuhan bisnis Anda &mdash; mulai dari landing page sederhana hingga platform e-commerce kompleks.</p>
+          <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;">
+            <a href="contact.html" class="btn btn-purple">&#x1F91D; Diskusi Gratis</a>
+            <a href="https://wa.me/6287831258910?text=Halo%20Nurzal!%20Saya%20ingin%20membuat%20website..." target="_blank" rel="noopener" class="btn btn-glass">&#x1F4AC; WhatsApp Langsung</a>
+          </div>
+          <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <div style="font-family:var(--fd);font-size:1.4rem;font-weight:800;color:var(--purple-light);">Rp 500K</div>
+              <div style="font-size:0.72rem;color:var(--w50);text-transform:uppercase;letter-spacing:1px;">Mulai dari</div>
+            </div>
+            <div style="width:1px;background:var(--glass-b);"></div>
+            <div style="text-align:center;">
+              <div style="font-family:var(--fd);font-size:1.4rem;font-weight:800;color:var(--purple-light);">5 Hari</div>
+              <div style="font-size:0.72rem;color:var(--w50);text-transform:uppercase;letter-spacing:1px;">Pengerjaan Tercepat</div>
+            </div>
+            <div style="width:1px;background:var(--glass-b);"></div>
+            <div style="text-align:center;">
+              <div style="font-family:var(--fd);font-size:1.4rem;font-weight:800;color:var(--purple-light);">3x</div>
+              <div style="font-size:0.72rem;color:var(--w50);text-transform:uppercase;letter-spacing:1px;">Revisi Gratis</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Nurzal <span>Kifli</span></span>
+          <p data-i18n="footer.bio.home">Profesional multi-bidang yang berdedikasi menghadirkan karya terbaik &mdash; Fotografi, Desain Grafis, dan Konstruksi.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">&#x1F4F8;</a>
+            <a href="https://wa.me/6287831258910" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">&#x1F4AC;</a>
+            <a href="mailto:nurzalkifli.nk@gmail.com" class="social-icon" aria-label="Email">&#x2709;&#xFE0F;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer.pages">Halaman</h4>
+          <a href="index.html" data-i18n="nav.home">Home</a>
+          <a href="photography.html" data-i18n="nav.photography">Fotografi</a>
+          <a href="design.html" data-i18n="nav.design">Desain Grafis</a>
+          <a href="contractor.html" data-i18n="nav.contractor">Kontraktor</a>
+          <a href="projects.html" data-i18n="nav.projects">Projects</a>
+          <a href="about.html" data-i18n="nav.about">Tentang Saya</a>
+          <a href="contact.html" data-i18n="nav.contact">Kontak</a>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer.contact-col">Kontak</h4>
+          <a href="https://www.instagram.com/nurzalkifli/" target="_blank" rel="noopener">@nurzalkifli</a>
+          <a href="https://wa.me/6287831258910" target="_blank" rel="noopener">087831258910</a>
+          <a href="mailto:nurzalkifli.nk@gmail.com">nurzalkifli.nk@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p data-i18n="footer.rights">&copy; 2024 Nurzal Kifli. Semua hak dilindungi.</p>
+        <p style="color:var(--purple-light);font-size:0.8rem;" data-i18n="footer.tagline">Dibuat dengan &#x2726; Passion</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // Projects filter (category-based, reusing main.js filterBtns logic)
+    document.querySelectorAll('.filter-tabs .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tabs .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('#projectsGrid .project-card').forEach(card => {
+          const cat = card.dataset.category;
+          if (filter === 'all' || cat === filter) {
+            card.style.display = '';
+            card.style.opacity = '0';
+            setTimeout(() => { card.style.opacity = '1'; card.style.transition = 'opacity 0.4s ease'; }, 30);
+          } else {
+            card.style.opacity = '0';
+            card.style.transition = 'opacity 0.25s ease';
+            setTimeout(() => { card.style.display = 'none'; }, 260);
+          }
+        });
+        // Also hide/show the add-project card
+        if (filter === 'all') {
+          document.querySelector('.add-project-card').style.display = '';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
