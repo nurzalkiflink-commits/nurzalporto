@@ -568,3 +568,127 @@ h1, h2, h3, h4 { font-family: var(--fd); line-height: 1.15; letter-spacing: -0.0
   color:var(--purple-light);
   box-shadow:var(--glow-s);
 }
+
+/* ── NAV CONTROLS (Theme + Language) ── */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+}
+.control-btn {
+  height: 34px;
+  border-radius: 50px;
+  background: var(--glass);
+  border: 1px solid var(--glass-b);
+  color: var(--w70);
+  cursor: pointer;
+  transition: var(--t);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  font-family: var(--fb);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+}
+.control-btn:hover {
+  background: var(--glass-h);
+  border-color: var(--glass-bh);
+  color: var(--purple-light);
+  transform: translateY(-1px);
+}
+.theme-btn { width: 34px; font-size: 0.9rem; }
+.lang-btn  { padding: 0 12px; }
+
+@media (max-width: 768px) {
+  .nav-controls { display: none; }
+}
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+  --bg:      #faf8ff;
+  --bg-1:    #f0ecff;
+  --bg-2:    #ffffff;
+  --bg-3:    #f5f3ff;
+  --bg-4:    #ede9fe;
+  --glass:   rgba(139,92,246,0.07);
+  --glass-h: rgba(139,92,246,0.13);
+  --glass-b: rgba(139,92,246,0.15);
+  --glass-bh:rgba(139,92,246,0.30);
+  --glass-w: rgba(255,255,255,0.75);
+  --w100: #1e0a3c;
+  --w90:  rgba(30,10,60,0.90);
+  --w70:  rgba(30,10,60,0.70);
+  --w50:  rgba(30,10,60,0.50);
+  --w20:  rgba(30,10,60,0.20);
+  --w10:  rgba(30,10,60,0.10);
+  --w05:  rgba(30,10,60,0.05);
+  --glow:   0 0 40px rgba(139,92,246,0.15);
+  --glow-s: 0 0 20px rgba(139,92,246,0.10);
+  --shadow: 0 8px 40px rgba(109,40,217,0.10);
+}
+
+[data-theme="light"] body {
+  background: #faf8ff;
+  background-image: linear-gradient(135deg, #faf8ff 0%, #f0ecff 40%, #f5f0ff 70%, #faf8ff 100%);
+}
+
+[data-theme="light"] .orb { opacity: 0.05; }
+
+[data-theme="light"] .navbar.scrolled {
+  background: rgba(250,248,255,0.92);
+  border-bottom-color: rgba(139,92,246,0.12);
+}
+
+[data-theme="light"] .footer {
+  background: rgba(237,233,254,0.92);
+  border-top-color: rgba(139,92,246,0.15);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg-3); }
+
+[data-theme="light"] .form-select option {
+  background: #ffffff;
+  color: #1e0a3c;
+}
+
+[data-theme="light"] .lightbox {
+  background: rgba(240,236,255,0.97);
+}
+
+@media (max-width:768px) {
+  [data-theme="light"] .nav-links {
+    background: rgba(250,248,255,0.98);
+  }
+}
+
+/* ── LIGHT THEME GLASS CARD overrides ── */
+[data-theme="light"] .glass-card,
+[data-theme="light"] .project-card,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .photo-service-card,
+[data-theme="light"] .testimonial-card,
+[data-theme="light"] .why-card,
+[data-theme="light"] .value-card,
+[data-theme="light"] .contact-method,
+[data-theme="light"] .contact-info-card,
+[data-theme="light"] .contact-form-card,
+[data-theme="light"] .testimonial-mini,
+[data-theme="light"] .cta-project-box,
+[data-theme="light"] .cta-glass-box {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(139,92,246,0.15);
+}
+[data-theme="light"] .hero-badge,
+[data-theme="light"] .about-photo-badge {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(139,92,246,0.2);
+}
+[data-theme="light"] .card-status.live { background: rgba(16,185,129,0.08); }
+[data-theme="light"] .add-project-card { border-color: rgba(139,92,246,0.2); }
+[data-theme="light"] .process-step,
+[data-theme="light"] .tool-item,
+[data-theme="light"] .why-card { background: rgba(255,255,255,0.55); }
+
